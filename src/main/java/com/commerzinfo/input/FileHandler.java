@@ -30,20 +30,20 @@ public class FileHandler {
         }
 
         if (files.size() == 0)
-            throw new IllegalArgumentException("no file matching " + StringUtils.join(Constants.HTML_PATTERNS, ',') + " were found (recursion active: " + Boolean.toString(isRecursive) +
+            throw new IllegalArgumentException("no file matching " + StringUtils.join(Constants.ALLOWED_PATTERNS, ',') + " were found (recursion active: " + Boolean.toString(isRecursive) +
                     ")");
 
         return files;
     }
 
     private static Collection<File> handleDirectory(File input, IOFileFilter dirFilter) {
-        return FileUtils.listFiles(input, Constants.HTML_FILE_FILTER, dirFilter);
+        return FileUtils.listFiles(input, Constants.ALLOWED_FILE_FILTER, dirFilter);
     }
 
     private static Collection<File> handleFile(File input) {
         Collection<File> files = Lists.newLinkedList();
 
-        if (Constants.HTML_FILE_FILTER.accept(input))
+        if (Constants.ALLOWED_FILE_FILTER.accept(input))
             files.add(input);
 
         return files;
