@@ -35,10 +35,15 @@ public class Launcher {
             String elementToSearch = HTMLElementName.SPAN;
 
             for (File file : fileList) {
-                Collection<String> elementsFromFile = HTMLReader.getElementsFromFile(file, elementToSearch);
-                logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
-                Collection<DataRow> parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
-                logger.info(file + " has " + parsedRows.size() + " parsed rows");
+                Collection<DataRow> parsedRows = Collections.EMPTY_LIST;
+
+                if (Constants.HTML_FILE_FILTER.accept(file)) {
+                    Collection<String> elementsFromFile = HTMLReader.getElementsFromFile(file, elementToSearch);
+                    logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
+                    parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
+                    logger.info(file + " has " + parsedRows.size() + " parsed rows");
+                }
+
 //                ExcelWriter.writeParsedRowsToFile(file, parsedRows);
                 AnotherExcelWriter.writeParsedRowsToFile(file, parsedRows);
             }
