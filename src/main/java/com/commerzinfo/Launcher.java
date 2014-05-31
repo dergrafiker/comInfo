@@ -11,6 +11,7 @@ import com.commerzinfo.input.HTMLReader;
 import com.commerzinfo.output.AnotherExcelWriter;
 import com.commerzinfo.parse.BuchungszeilenParser;
 import com.commerzinfo.util.CompressionUtil;
+import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
 import net.htmlparser.jericho.HTMLElementName;
 import org.kohsuke.args4j.CmdLineParser;
@@ -18,11 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Launcher {
@@ -44,30 +50,11 @@ public class Launcher {
 
             for (File file : fileList) {
                 Collection<DataRow> parsedRows = Collections.EMPTY_LIST;
-
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
-                    Collection<String> elementsFromFile = HTMLReader.getElementsFromFile(file, elementToSearch);
-                    logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
-                    parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
-                    logger.info(file + " has " + parsedRows.size() + " parsed rows");
+                    parsedRows = handleHTML(elementToSearch, file);
                 } else if (Constants.CSV_FILE_FILTER.accept(file)) {
-                    CSVReader csvReader = new CSVReader(new InputStreamReader(CompressionUtil.getCorrectInputStream(file), "UTF-8"), ';', '"');
-                    HeaderColumnNameTranslateMappingStrategy<CSVBean> strat = new HeaderColumnNameTranslateMappingStrategy<CSVBean>();
-                    strat.setType(CSVBean.class);
-                    Map<String, String> map = new HashMap<String, String>();
-                    map.put("Buchungstag", "buchungstag"); //TODO remove BOM
-                    map.put("Wertstellung", "wertstellung");
-                    map.put("Buchungstext", "buchungstext");
-                    map.put("Betrag", "betrag");
-                    map.put("Währung", "waehrung");
-                    strat.setColumnMapping(map);
-
-                    CsvToBean<CSVBean> csv = new CsvToBean<CSVBean>();
-                    List<CSVBean> list = csv.parse(strat, csvReader);
-
-                    System.out.println();
+                    parsedRows = handleCSV(file);
                 }
-
 //                ExcelWriter.writeParsedRowsToFile(file, parsedRows);
                 AnotherExcelWriter.writeParsedRowsToFile(file, parsedRows);
             }
@@ -75,5 +62,50 @@ public class Launcher {
             logger.error("an error occurred while launching the program", e);
             throw e;
         }
+    }
+
+    private static Collection<DataRow> handleHTML(String elementToSearch, File file) throws IOException {
+        Collection<DataRow> parsedRows;
+        Collection<String> elementsFromFile = HTMLReader.getElementsFromFile(file, elementToSearch);
+        logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
+        parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
+        logger.info(file + " has " + parsedRows.size() + " parsed rows");
+        return parsedRows;
+    }
+
+    private static Collection<DataRow> handleCSV(File file) throws IOException {
+        Collection<DataRow> dataRows = new ArrayList<DataRow>();
+
+        CSVReader csvReader = new CSVReader(new InputStreamReader(CompressionUtil.getCorrectInputStream(file), "UTF-8"), ';', '"');
+        HeaderColumnNameTranslateMappingStrategy<CSVBean> strat = new HeaderColumnNameTranslateMappingStrategy<CSVBean>();
+        strat.setType(CSVBean.class);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("Buchungstag", "buchungstag");
+        map.put("Wertstellung", "wertstellung");
+        map.put("Buchungstext", "buchungstext");
+        map.put("Betrag", "betrag");
+        map.put("Währung", "waehrung");
+        strat.setColumnMapping(map);
+
+        CsvToBean<CSVBean> csv = new CsvToBean<CSVBean>();
+        List<CSVBean> csvBeanList = csv.parse(strat, csvReader);
+        DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance(Locale.GERMAN);
+        df.setNegativePrefix("-");
+        df.setPositivePrefix("+");
+
+        for (CSVBean csvBean : csvBeanList) {
+            try {
+                DataRow row = new DataRow();
+                row.setBookingDate(DateUtil.parse(csvBean.getBuchungstag()));
+                row.setValueDate(DateUtil.parse(csvBean.getWertstellung()));
+                row.setBookingText(csvBean.getBuchungstext());
+                row.setValue(df.parse(csvBean.getBetrag()).doubleValue());
+                dataRows.add(row);
+            } catch (ParseException e) {
+                logger.error("problem with datarow mapping", e);
+            }
+
+        }
+        return dataRows;
     }
 }

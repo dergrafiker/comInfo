@@ -20,13 +20,12 @@ public final class CompressionUtil {
 
     public static InputStream getCorrectInputStream(File inputFile) throws IOException {
         InputStream fis = IOUtils.toBufferedInputStream(new FileInputStream(inputFile));
-        fis = checkForUtf8BOMAndDiscardIfAny(fis);
-
         if (GzipUtils.isCompressedFilename(inputFile.getName())) {
             fis = new GzipCompressorInputStream(fis, true);
         } else if (BZip2Utils.isCompressedFilename(inputFile.getName())) {
             fis = new BZip2CompressorInputStream(fis, true);
         }
+        fis = checkForUtf8BOMAndDiscardIfAny(fis);
         return fis;
     }
 
