@@ -14,6 +14,10 @@ import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
 import net.htmlparser.jericho.HTMLElementName;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.h2.generated.tables.Datarow;
+import org.jooq.impl.DSL;
 import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +25,11 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -55,12 +64,38 @@ public class Launcher {
                 } else if (Constants.CSV_FILE_FILTER.accept(file)) {
                     parsedRows = handleCSV(file);
                 }
+
+                insertRowsIntoDB(parsedRows);
+
 //                ExcelWriter.writeParsedRowsToFile(file, parsedRows);
                 AnotherExcelWriter.writeParsedRowsToFile(file, parsedRows);
             }
         } catch (Exception e) {
             logger.error("an error occurred while launching the program", e);
             throw e;
+        }
+    }
+
+    private static void insertRowsIntoDB(Collection<DataRow> parsedRows) throws SQLException {
+        Connection conn = null;
+        try {
+            Class.forName("org.h2.Driver");
+            conn = DriverManager.getConnection("jdbc:h2:~/cominfo", "sa", "");
+
+            DSLContext create = DSL.using(conn, SQLDialect.H2);
+            for (DataRow p : parsedRows) {
+                create.insertInto(Datarow.DATAROW)
+                        .set(Datarow.DATAROW.BOOKING_VALUE, BigDecimal.valueOf(p.getValue()))
+                        .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
+                        .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
+                        .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime()));
+            }
+            conn.commit();
+        } catch (Exception e) {
+            logger.error("an error occurred while launching the program", e);
+        } finally {
+            if (conn != null)
+                conn.close();
         }
     }
 
