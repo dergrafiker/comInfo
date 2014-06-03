@@ -88,7 +88,7 @@ public class Launcher {
                         .set(Datarow.DATAROW.BOOKING_VALUE, BigDecimal.valueOf(p.getValue()))
                         .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
                         .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
-                        .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime()));
+                        .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
             }
             conn.commit();
         } catch (Exception e) {
