@@ -14,8 +14,11 @@ import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
 import net.htmlparser.jericho.HTMLElementName;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
+import org.jooq.exception.DataAccessException;
 import org.jooq.h2.generated.tables.Datarow;
 import org.jooq.impl.DSL;
 import org.kohsuke.args4j.CmdLineParser;
@@ -84,12 +87,16 @@ public class Launcher {
 
             DSLContext create = DSL.using(conn, SQLDialect.H2);
             for (DataRow p : parsedRows) {
-                create.insertInto(Datarow.DATAROW)
-                        .set(Datarow.DATAROW.ID, p.hashCode())
-                        .set(Datarow.DATAROW.BOOKING_VALUE, BigDecimal.valueOf(p.getValue()))
-                        .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
-                        .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
-                        .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
+                try {
+                    create.insertInto(Datarow.DATAROW)
+                            .set(Datarow.DATAROW.BOOKING_VALUE, BigDecimal.valueOf(p.getValue()))
+                            .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
+                            .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
+                            .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
+                } catch (DataAccessException dae) {
+                    String message = String.format("problem while inserting %s", ToStringBuilder.reflectionToString(p, ToStringStyle.MULTI_LINE_STYLE));
+                    throw new RuntimeException(message, dae);
+                }
             }
             conn.commit();
         } catch (ClassNotFoundException e) {
