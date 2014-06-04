@@ -10,6 +10,10 @@
 
     <properties>
         <h2.version>1.3.161</h2.version>
+        <db.driver>org.h2.Driver</db.driver>
+        <db.url>jdbc:h2:~/cominfo</db.url>
+        <db.user>sa</db.user>
+        <db.password></db.password>
     </properties>
 
     <dependencies>
@@ -161,10 +165,10 @@
 
                 <configuration>
                     <jdbc>
-                        <driver>org.h2.Driver</driver>
-                        <url>jdbc:h2:~/cominfo</url>
-                        <user>sa</user>
-                        <password></password>
+                        <driver>${db.driver}</driver>
+                        <url>${db.url}</url>
+                        <user>${db.user}</user>
+                        <password>${db.password}</password>
                     </jdbc>
                     <generator>
                         <name>org.jooq.util.DefaultGenerator</name>
@@ -184,4 +188,50 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>cleandb</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <version>1.5</version>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                                <version>${h2.version}</version>
+                            </dependency>
+                        </dependencies>
+
+                        <configuration>
+                            <driver>${db.driver}</driver>
+                            <url>${db.url}</url>
+                            <username>${db.user}</username>
+                            <password>${db.password}</password>
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>create-schema</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <srcFiles>
+                                        <srcFile>src/main/resources/CREATE_DB.sql</srcFile>
+                                    </srcFiles>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
