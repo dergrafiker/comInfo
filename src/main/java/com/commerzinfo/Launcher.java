@@ -84,14 +84,15 @@ public class Launcher {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:~/cominfo", "sa", "");
 
-            DSLContext create = DSL.using(conn, SQLDialect.H2);
+            DSLContext dsl = DSL.using(conn, SQLDialect.H2);
             for (DataRow p : parsedRows) {
                 try {
-                    create.insertInto(Datarow.DATAROW)
+                    dsl.insertInto(Datarow.DATAROW)
                             .set(Datarow.DATAROW.BOOKING_VALUE, BigDecimal.valueOf(p.getValue()))
                             .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
                             .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
                             .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
+//                    dsl.insertInto(org.jooq.h2.generated.tables.Category.CATEGORY).set(org.jooq.h2.generated.tables.Category.CATEGORY.REGEX, "1234").execute();
                 } catch (DataAccessException dae) {
                     boolean isDuplicate = StringUtils.contains(dae.getMessage(), "Unique index or primary key violation");
                     if (isDuplicate)
@@ -100,7 +101,14 @@ public class Launcher {
                         throw dae;
                 }
             }
-            conn.commit();
+
+//            dsl.delete(org.jooq.h2.generated.tables.Category.CATEGORY).execute();
+//
+//            Properties properties = CategoryCollection.getProperties();
+//            for (String catName : properties.stringPropertyNames()) {
+//                String regex = properties.getProperty(catName);
+//            }
+
         } catch (ClassNotFoundException e) {
             logger.error("an error occurred while launching the program", e);
         } finally {
