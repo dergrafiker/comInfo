@@ -14,6 +14,7 @@ import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
 import net.htmlparser.jericho.HTMLElementName;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.jooq.DSLContext;
@@ -94,8 +95,11 @@ public class Launcher {
                             .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
                             .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
                 } catch (DataAccessException dae) {
-                    String message = String.format("problem while inserting %s", ToStringBuilder.reflectionToString(p, ToStringStyle.MULTI_LINE_STYLE));
-                    throw new RuntimeException(message, dae);
+                    boolean isDuplicate = StringUtils.contains(dae.getMessage(), "Unique index or primary key violation");
+                    if (isDuplicate)
+                        logger.warn("duplicate row: {}", ToStringBuilder.reflectionToString(p, ToStringStyle.SIMPLE_STYLE));
+                    else
+                        throw dae;
                 }
             }
             conn.commit();
