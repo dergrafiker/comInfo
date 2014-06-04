@@ -15,8 +15,6 @@ import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
 import net.htmlparser.jericho.HTMLElementName;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.exception.DataAccessException;
@@ -97,7 +95,7 @@ public class Launcher {
                 } catch (DataAccessException dae) {
                     boolean isDuplicate = StringUtils.contains(dae.getMessage(), "Unique index or primary key violation");
                     if (isDuplicate)
-                        logger.warn("duplicate row: {}", ToStringBuilder.reflectionToString(p, ToStringStyle.SIMPLE_STYLE));
+                        logger.warn("duplicate row: {}", p);
                     else
                         throw dae;
                 }
