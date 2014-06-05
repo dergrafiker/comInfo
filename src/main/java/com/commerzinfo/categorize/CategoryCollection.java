@@ -6,6 +6,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Properties;
+import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +31,7 @@ public class CategoryCollection {
             return (input != null) ? input.getCategoryName() : "";
         }
     };
-    private static Properties properties = null;
+    private static final LinkedHashMap<String, Matcher> categoryMap = Maps.newLinkedHashMap();
 
     @SuppressWarnings("unchecked")
     public static Collection<Category> createCategories(File configFile) {
@@ -38,7 +39,7 @@ public class CategoryCollection {
 
         if (configFile != null && configFile.isFile()) {
             try {
-                properties = new LinkedProperties();
+                LinkedProperties properties = new LinkedProperties();
                 properties.load(new FileReader(configFile));
 
                 for (String propName : properties.stringPropertyNames()) {
@@ -50,6 +51,9 @@ public class CategoryCollection {
                         value = whitespaceMatcher.replaceAll("\\\\s+");
                         logger.info("replacing whitespaces " + oldValue + "=>" + value);
                     }
+
+                    Matcher matcher = Pattern.compile(value, Pattern.CASE_INSENSITIVE).matcher("");
+                    categoryMap.put(propName, matcher);
                     addCat(allCategories, propName, PredicateUtil.findPatternPredicate(value));
                 }
             } catch (Exception e) {
@@ -58,6 +62,7 @@ public class CategoryCollection {
         }
 
         addCat(allCategories, CATCHALL, Predicates.<DataRow>alwaysTrue());
+        categoryMap.put(CATCHALL, Pattern.compile(".*", Pattern.CASE_INSENSITIVE).matcher(""));
         return allCategories;
     }
 
@@ -73,7 +78,7 @@ public class CategoryCollection {
         return Collections2.transform(allCategories, CATEGORY_STRING_FUNCTION);
     }
 
-    public static Properties getProperties() {
-        return properties;
+    public static LinkedHashMap<String, Matcher> getCategoryMap() {
+        return categoryMap;
     }
 }
