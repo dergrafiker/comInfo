@@ -1,12 +1,12 @@
 package com.commerzinfo.data;
 
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
+import java.text.DateFormat;
 import java.util.Date;
 
 public class DataRow {
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
     private Date bookingDate;
     private String bookingText;
     private Date valueDate;
@@ -46,7 +46,12 @@ public class DataRow {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        return "DataRow{" +
+                "bookingDate=" + df.format(bookingDate) +
+                ", bookingText='" + bookingText + '\'' +
+                ", valueDate=" + df.format(valueDate) +
+                ", value=" + value +
+                '}';
     }
 
     @Override

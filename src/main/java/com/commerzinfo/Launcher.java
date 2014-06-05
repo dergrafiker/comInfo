@@ -14,8 +14,11 @@ import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
 import net.htmlparser.jericho.HTMLElementName;
+import org.apache.commons.lang.StringUtils;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
+import org.jooq.exception.DataAccessException;
+import org.jooq.h2.generated.tables.Category;
 import org.jooq.h2.generated.tables.Datarow;
 import org.jooq.impl.DSL;
 import org.kohsuke.args4j.CmdLineParser;
@@ -29,7 +32,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -39,11 +41,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 public class Launcher {
     private static Logger logger = LoggerFactory.getLogger(Launcher.class);
 
     public static void main(String[] args) throws Exception {
+        Connection conn = null;
         try {
             MyOptions myOptions = new MyOptions();
             CmdLineParser parser = new CmdLineParser(myOptions);
@@ -57,6 +61,10 @@ public class Launcher {
             Collections.sort(fileList, Collections.reverseOrder());
             String elementToSearch = HTMLElementName.SPAN;
 
+            Class.forName("org.h2.Driver");
+            conn = DriverManager.getConnection("jdbc:h2:~/cominfo", "sa", "");
+            DSLContext dsl = DSL.using(conn, SQLDialect.H2);
+
             for (File file : fileList) {
                 Collection<DataRow> parsedRows = Collections.EMPTY_LIST;
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
@@ -65,37 +73,52 @@ public class Launcher {
                     parsedRows = handleCSV(file);
                 }
 
-                insertRowsIntoDB(parsedRows);
+                insertRowsIntoDB(parsedRows, dsl);
 
 //                ExcelWriter.writeParsedRowsToFile(file, parsedRows);
                 AnotherExcelWriter.writeParsedRowsToFile(file, parsedRows);
             }
+
+            buildCategories(dsl);
+
         } catch (Exception e) {
             logger.error("an error occurred while launching the program", e);
             throw e;
+        } finally {
+            if (conn != null)
+                conn.close();
         }
     }
 
-    private static void insertRowsIntoDB(Collection<DataRow> parsedRows) throws SQLException {
-        Connection conn = null;
-        try {
-            Class.forName("org.h2.Driver");
-            conn = DriverManager.getConnection("jdbc:h2:~/cominfo", "sa", "");
+    private static void buildCategories(DSLContext dsl) {
+        dsl.delete(org.jooq.h2.generated.tables.Category.CATEGORY).execute();
 
-            DSLContext create = DSL.using(conn, SQLDialect.H2);
-            for (DataRow p : parsedRows) {
-                create.insertInto(Datarow.DATAROW)
+        Properties properties = CategoryCollection.getProperties();
+        for (String catName : properties.stringPropertyNames()) {
+            String regex = properties.getProperty(catName);
+            dsl.insertInto(org.jooq.h2.generated.tables.Category.CATEGORY)
+                    .set(Category.CATEGORY.NAME, catName)
+                    .set(org.jooq.h2.generated.tables.Category.CATEGORY.REGEX, regex)
+                    .execute();
+        }
+    }
+
+    private static void insertRowsIntoDB(Collection<DataRow> parsedRows, DSLContext dsl) {
+        for (DataRow p : parsedRows) {
+            try {
+                dsl.insertInto(Datarow.DATAROW)
                         .set(Datarow.DATAROW.BOOKING_VALUE, BigDecimal.valueOf(p.getValue()))
                         .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
                         .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
                         .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
+
+            } catch (DataAccessException dae) {
+                boolean isDuplicate = StringUtils.contains(dae.getMessage(), "Unique index or primary key violation");
+                if (isDuplicate)
+                    logger.warn("duplicate row: {}", p);
+                else
+                    throw dae;
             }
-            conn.commit();
-        } catch (Exception e) {
-            logger.error("an error occurred while launching the program", e);
-        } finally {
-            if (conn != null)
-                conn.close();
         }
     }
 

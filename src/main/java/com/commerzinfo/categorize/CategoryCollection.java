@@ -30,6 +30,7 @@ public class CategoryCollection {
             return (input != null) ? input.getCategoryName() : "";
         }
     };
+    private static Properties properties = null;
 
     @SuppressWarnings("unchecked")
     public static Collection<Category> createCategories(File configFile) {
@@ -37,7 +38,7 @@ public class CategoryCollection {
 
         if (configFile != null && configFile.isFile()) {
             try {
-                Properties properties = new LinkedProperties();
+                properties = new LinkedProperties();
                 properties.load(new FileReader(configFile));
 
                 for (String propName : properties.stringPropertyNames()) {
@@ -70,5 +71,9 @@ public class CategoryCollection {
 
     public static Collection<String> getAllCategoryNames() {
         return Collections2.transform(allCategories, CATEGORY_STRING_FUNCTION);
+    }
+
+    public static Properties getProperties() {
+        return properties;
     }
 }
