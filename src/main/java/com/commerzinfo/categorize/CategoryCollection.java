@@ -7,23 +7,21 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CategoryCollection {
-    private static Logger logger = LoggerFactory.getLogger(CategoryCollection.class);
-    private static final Collection<Category> allCategories = new ArrayList<Category>();
-    private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
-
     public static final String CATCHALL = "catchall";
     public static final Function<Category, String> CATEGORY_STRING_FUNCTION = new Function<Category, String>() {
         @Override
@@ -31,7 +29,10 @@ public class CategoryCollection {
             return (input != null) ? input.getCategoryName() : "";
         }
     };
+    private static final Collection<Category> allCategories = new ArrayList<Category>();
+    private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
     private static final LinkedHashMap<String, Matcher> categoryMap = Maps.newLinkedHashMap();
+    private static Logger logger = LoggerFactory.getLogger(CategoryCollection.class);
 
     @SuppressWarnings("unchecked")
     public static Collection<Category> createCategories(File configFile) {
@@ -39,22 +40,20 @@ public class CategoryCollection {
 
         if (configFile != null && configFile.isFile()) {
             try {
-                LinkedProperties properties = new LinkedProperties();
-                properties.load(new FileReader(configFile));
+                for (Map.Entry<String, String> entry : getPropertyMap(configFile).entrySet()) {
+                    String catName = entry.getKey();
+                    String regex = entry.getValue();
 
-                for (String propName : properties.stringPropertyNames()) {
-                    String value = properties.getProperty(propName);
-
-                    whitespaceMatcher.reset(value);
+                    whitespaceMatcher.reset(regex);
                     if (whitespaceMatcher.find()) {
-                        String oldValue = value;
-                        value = whitespaceMatcher.replaceAll("\\\\s+");
-                        logger.info("replacing whitespaces " + oldValue + "=>" + value);
+                        String oldValue = regex;
+                        regex = whitespaceMatcher.replaceAll("\\\\s+");
+                        logger.info("replacing whitespaces " + oldValue + "=>" + regex);
                     }
 
-                    Matcher matcher = Pattern.compile(value, Pattern.CASE_INSENSITIVE).matcher("");
-                    categoryMap.put(propName, matcher);
-                    addCat(allCategories, propName, PredicateUtil.findPatternPredicate(value));
+                    Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher("");
+                    categoryMap.put(catName, matcher);
+                    addCat(allCategories, catName, PredicateUtil.findPatternPredicate(regex));
                 }
             } catch (Exception e) {
                 throw new RuntimeException("configFile=" + configFile.getAbsolutePath(), e);
@@ -64,6 +63,17 @@ public class CategoryCollection {
         addCat(allCategories, CATCHALL, Predicates.<DataRow>alwaysTrue());
         categoryMap.put(CATCHALL, Pattern.compile(".*", Pattern.CASE_INSENSITIVE).matcher(""));
         return allCategories;
+    }
+
+    private static Map<String, String> getPropertyMap(File configFile) throws IOException {
+        Map<String, String> propertyMap = new LinkedHashMap<String, String>();
+        for (String line : FileUtils.readLines(configFile, "UTF-8")) {
+            if (!line.contains("="))
+                continue;
+            final String[] split = line.split("=");
+            propertyMap.put(split[0], split[1]);
+        }
+        return propertyMap;
     }
 
     private static void addCat(Collection<Category> categoryCollection, String categoryName, Predicate<DataRow> predicate) {
