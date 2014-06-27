@@ -54,6 +54,10 @@ public class Launcher {
         try {
             MyOptions myOptions = new MyOptions();
             CmdLineParser parser = new CmdLineParser(myOptions);
+            if (args.length == 0) {
+                parser.printUsage(System.out);
+                System.exit(1);
+            }
             parser.parseArgument(args);
 
             CategoryCollection.createCategories(myOptions.getConfigFile()); //init
