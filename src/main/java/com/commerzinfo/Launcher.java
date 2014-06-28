@@ -6,7 +6,6 @@ import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import com.commerzinfo.categorize.CategoryCollection;
 import com.commerzinfo.data.CSVBean;
 import com.commerzinfo.data.DataRow;
-import com.commerzinfo.input.FileHandler;
 import com.commerzinfo.input.HTMLReader;
 import com.commerzinfo.output.AnotherExcelWriter;
 import com.commerzinfo.parse.BuchungszeilenParser;
@@ -14,6 +13,8 @@ import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
 import net.htmlparser.jericho.HTMLElementName;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.jooq.Cursor;
 import org.jooq.DSLContext;
@@ -62,8 +63,11 @@ public class Launcher {
 
             CategoryCollection.createCategories(myOptions.getConfigFile()); //init
 
-            List<File> fileList;
-            fileList = FileHandler.getFiles(myOptions.getArguments(), myOptions.isRecursive());
+            List<File> fileList = new ArrayList<File>();
+            for (String s : myOptions.getArguments()) {
+                fileList.addAll(FileUtils.listFiles(new File(s), Constants.ALLOWED_FILE_FILTER, TrueFileFilter.INSTANCE));
+            }
+
             fileList = FileCompressor.compressFiles(fileList, ".bz2");
             Collections.sort(fileList, Collections.reverseOrder());
             String elementToSearch = HTMLElementName.SPAN;
