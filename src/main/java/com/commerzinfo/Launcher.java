@@ -72,7 +72,7 @@ public class Launcher {
             Collections.sort(fileList, Collections.reverseOrder());
             String elementToSearch = HTMLElementName.SPAN;
 
-            Class.forName("org.h2.Driver");
+            Class.forName(org.h2.Driver.class.getName());
             conn = DriverManager.getConnection("jdbc:h2:~/cominfo", "sa", "");
             DSLContext dsl = DSL.using(conn, SQLDialect.H2);
 

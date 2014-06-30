@@ -123,6 +123,15 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <minimizeJar>true</minimizeJar>
+                    <filters>
+                        <filter>
+                            <artifact>com.h2database:h2</artifact>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </filter>
+                    </filters>
                     <finalName>${artifactId}-${maven.build.timestamp}-${git.buildnumber}</finalName>
                     <transformers>
                         <transformer
