@@ -94,6 +94,23 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>ru.concerteza.buildnumber</groupId>
+                <artifactId>maven-jgit-buildnumber-plugin</artifactId>
+                <version>1.2.7</version>
+                <executions>
+                    <execution>
+                        <id>git-buildnumber</id>
+                        <goals>
+                            <goal>extract-buildnumber</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <javaScriptBuildnumberCallback>branch + "_"+shortRevision</javaScriptBuildnumberCallback>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>1.7</version>
@@ -106,7 +123,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!--<finalName>uber-${artifactId}-${version}</finalName>-->
+                    <finalName>${artifactId}-${maven.build.timestamp}-${git.buildnumber}</finalName>
                     <minimizeJar>true</minimizeJar>
                     <transformers>
                         <transformer
