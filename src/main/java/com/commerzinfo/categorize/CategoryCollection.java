@@ -2,31 +2,24 @@ package com.commerzinfo.categorize;
 
 import com.commerzinfo.data.DataRow;
 import com.commerzinfo.util.PredicateUtil;
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CategoryCollection {
     public static final String CATCHALL = "catchall";
-    public static final Function<Category, String> CATEGORY_STRING_FUNCTION = new Function<Category, String>() {
-        @Override
-        public String apply(@Nullable Category input) {
-            return (input != null) ? input.getCategoryName() : "";
-        }
-    };
     private static final Collection<Category> allCategories = new ArrayList<Category>();
     private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
     private static final LinkedHashMap<String, Matcher> categoryMap = Maps.newLinkedHashMap();
@@ -77,8 +70,12 @@ public class CategoryCollection {
         return allCategories;
     }
 
-    public static Collection<String> getAllCategoryNames() {
-        return Collections2.transform(allCategories, CATEGORY_STRING_FUNCTION);
+    public static List<String> getAllCategoryNames() {
+        List<String> nameList = Lists.newArrayList();
+        for (Category category : allCategories) {
+            nameList.add(category.getCategoryName());
+        }
+        return nameList;
     }
 
     public static LinkedHashMap<String, Matcher> getCategoryMap() {
