@@ -1,16 +1,9 @@
 package com.commerzinfo;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.bean.CsvToBean;
-import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
-import com.commerzinfo.data.CSVBean;
 import com.commerzinfo.data.DataRow;
-import com.commerzinfo.input.HTMLReader;
+import com.commerzinfo.input.csv.CSVParser;
+import com.commerzinfo.input.html.HTMLParser;
 import com.commerzinfo.output.AnotherExcelWriter;
-import com.commerzinfo.parse.BuchungszeilenParser;
-import com.commerzinfo.util.CompressionUtil;
-import com.commerzinfo.util.DateUtil;
-import com.commerzinfo.util.DecimalFormatUtil;
 import com.commerzinfo.util.FileCompressor;
 import com.google.common.collect.Lists;
 import net.htmlparser.jericho.HTMLElementName;
@@ -31,16 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -76,9 +65,9 @@ public class Launcher {
             for (File file : fileList) {
                 List<DataRow> parsedRows = Lists.newArrayList();
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
-                    parsedRows = handleHTML(HTMLElementName.SPAN, file);
+                    parsedRows = HTMLParser.handleHTML(HTMLElementName.SPAN, file);
                 } else if (Constants.CSV_FILE_FILTER.accept(file)) {
-                    parsedRows = handleCSV(file);
+                    parsedRows = CSVParser.handleCSV(file);
                 }
 
                 insertRowsIntoDB(parsedRows, dsl);
@@ -158,47 +147,5 @@ ORDER BY D.BOOKING_TEXT;
                     throw dae;
             }
         }
-    }
-
-    private static List<DataRow> handleHTML(String elementToSearch, File file) throws IOException {
-        List<DataRow> parsedRows;
-        List<String> elementsFromFile = HTMLReader.getElementsFromFile(file, elementToSearch);
-        logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
-        parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
-        logger.info(file + " has " + parsedRows.size() + " parsed rows");
-        return parsedRows;
-    }
-
-    private static List<DataRow> handleCSV(File file) throws IOException {
-        List<DataRow> dataRows = Lists.newArrayList();
-
-        CSVReader csvReader = new CSVReader(new InputStreamReader(CompressionUtil.getCorrectInputStream(file), "UTF-8"), ';', '"');
-        HeaderColumnNameTranslateMappingStrategy<CSVBean> strat = new HeaderColumnNameTranslateMappingStrategy<CSVBean>();
-        strat.setType(CSVBean.class);
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("Buchungstag", "buchungstag");
-        map.put("Wertstellung", "wertstellung");
-        map.put("Buchungstext", "buchungstext");
-        map.put("Betrag", "betrag");
-        map.put("Währung", "waehrung");
-        strat.setColumnMapping(map);
-
-        CsvToBean<CSVBean> csv = new CsvToBean<CSVBean>();
-        List<CSVBean> csvBeanList = csv.parse(strat, csvReader);
-
-        for (CSVBean csvBean : csvBeanList) {
-            try {
-                DataRow row = new DataRow();
-                row.setBookingDate(DateUtil.parse(csvBean.getBuchungstag()));
-                row.setValueDate(DateUtil.parse(csvBean.getWertstellung()));
-                row.setBookingText(csvBean.getBuchungstext());
-                row.setValue(DecimalFormatUtil.parse(csvBean.getBetrag(), DecimalFormatUtil.Mode.CSV).doubleValue());
-                dataRows.add(row);
-            } catch (ParseException e) {
-                logger.error("problem with datarow mapping", e);
-            }
-
-        }
-        return dataRows;
     }
 }

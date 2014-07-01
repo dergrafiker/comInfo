@@ -1,6 +1,6 @@
-package com.commerzinfo.parse.state;
+package com.commerzinfo.input.html.parse.state;
 
-import com.commerzinfo.parse.ParseStateContext;
+import com.commerzinfo.input.html.parse.ParseStateContext;
 import com.commerzinfo.util.DecimalFormatUtil;
 import com.commerzinfo.util.RegexUtil;
 

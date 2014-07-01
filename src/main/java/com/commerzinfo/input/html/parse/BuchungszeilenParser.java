@@ -1,4 +1,4 @@
-package com.commerzinfo.parse;
+package com.commerzinfo.input.html.parse;
 
 import com.commerzinfo.data.DataRow;
 import com.google.common.collect.Lists;

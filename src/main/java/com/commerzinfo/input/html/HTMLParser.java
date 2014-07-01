@@ -1,6 +1,8 @@
-package com.commerzinfo.input;
+package com.commerzinfo.input.html;
 
 import com.commerzinfo.Constants;
+import com.commerzinfo.data.DataRow;
+import com.commerzinfo.input.html.parse.BuchungszeilenParser;
 import com.commerzinfo.util.CompressionUtil;
 import com.google.common.collect.Lists;
 import net.htmlparser.jericho.Element;
@@ -15,8 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class HTMLReader {
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(HTMLReader.class);
+public class HTMLParser {
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(HTMLParser.class);
 
     static {
         MicrosoftConditionalCommentTagTypes.register();
@@ -25,7 +27,7 @@ public class HTMLReader {
         MasonTagTypes.register();
     }
 
-    public static List<String> getElementsFromFile(File file, String element) throws IOException {
+    private static List<String> getElementsFromFile(File file, String element) throws IOException {
         if (logger.isInfoEnabled())
             logger.info("READING FILE " + file.getAbsolutePath());
         if (!Constants.HTML_FILE_FILTER.accept(file)) {
@@ -39,5 +41,14 @@ public class HTMLReader {
             lines.add(currentElement.getContent().toString());
         }
         return lines;
+    }
+
+    public static List<DataRow> handleHTML(String elementToSearch, File file) throws IOException {
+        List<DataRow> parsedRows;
+        List<String> elementsFromFile = HTMLParser.getElementsFromFile(file, elementToSearch);
+        logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
+        parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
+        logger.info(file + " has " + parsedRows.size() + " parsed rows");
+        return parsedRows;
     }
 }

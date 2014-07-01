@@ -1,25 +1,23 @@
-package com.commerzinfo.parse;
+package com.commerzinfo.input.html.parse;
 
 import com.commerzinfo.data.DataRow;
-import com.commerzinfo.parse.state.ParseState;
-import com.commerzinfo.parse.state.StateBetrag;
-import com.commerzinfo.parse.state.StateBuchungstag;
-import com.commerzinfo.parse.state.StateBuchungstext;
-import com.commerzinfo.parse.state.StateValuta;
+import com.commerzinfo.input.html.parse.state.ParseState;
+import com.commerzinfo.input.html.parse.state.StateBetrag;
+import com.commerzinfo.input.html.parse.state.StateBuchungstag;
+import com.commerzinfo.input.html.parse.state.StateBuchungstext;
+import com.commerzinfo.input.html.parse.state.StateValuta;
 import com.commerzinfo.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ParseStateContext {
-    private static Logger logger = LoggerFactory.getLogger(ParseStateContext.class);
-
     public static final ParseState BUCHUNGSTAG_STATE = new StateBuchungstag();
+    public static final ParseState INITIAL_STATE = BUCHUNGSTAG_STATE;
+    private ParseState state = INITIAL_STATE;
     public static final ParseState BUCHUNGSTEXT_STATE = new StateBuchungstext();
     public static final ParseState VALUTA_STATE = new StateValuta();
     public static final ParseState BETRAG_STATE = new StateBetrag();
-    public static final ParseState INITIAL_STATE = BUCHUNGSTAG_STATE;
-
-    private ParseState state = INITIAL_STATE;
+    private static Logger logger = LoggerFactory.getLogger(ParseStateContext.class);
     private DataRow buchungszeile;
 
     public ParseStateContext() {

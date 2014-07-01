@@ -1,4 +1,4 @@
-package com.commerzinfo.data;
+package com.commerzinfo.input.csv;
 
 public class CSVBean {
     private String buchungstag;
