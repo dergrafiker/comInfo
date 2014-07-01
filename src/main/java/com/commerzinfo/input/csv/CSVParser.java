@@ -2,7 +2,7 @@ package com.commerzinfo.input.csv;
 
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
-import com.commerzinfo.data.DataRow;
+import com.commerzinfo.DataRow;
 import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.DecimalFormatUtil;

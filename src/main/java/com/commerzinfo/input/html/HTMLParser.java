@@ -1,7 +1,7 @@
 package com.commerzinfo.input.html;
 
 import com.commerzinfo.Constants;
-import com.commerzinfo.data.DataRow;
+import com.commerzinfo.DataRow;
 import com.commerzinfo.input.html.parse.BuchungszeilenParser;
 import com.commerzinfo.util.CompressionUtil;
 import com.google.common.collect.Lists;

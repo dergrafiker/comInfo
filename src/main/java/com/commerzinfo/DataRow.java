@@ -1,4 +1,4 @@
-package com.commerzinfo.data;
+package com.commerzinfo;
 
 
 import java.text.DateFormat;

@@ -1,6 +1,6 @@
 package com.commerzinfo.input.html.parse;
 
-import com.commerzinfo.data.DataRow;
+import com.commerzinfo.DataRow;
 import com.commerzinfo.input.html.parse.state.ParseState;
 import com.commerzinfo.input.html.parse.state.StateBetrag;
 import com.commerzinfo.input.html.parse.state.StateBuchungstag;

@@ -1,6 +1,6 @@
-package com.commerzinfo.output;
+package com.commerzinfo.util;
 
-import com.commerzinfo.data.DataRow;
+import com.commerzinfo.DataRow;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;

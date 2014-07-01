@@ -1,6 +1,6 @@
 package com.commerzinfo.input.html.parse;
 
-import com.commerzinfo.data.DataRow;
+import com.commerzinfo.DataRow;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
