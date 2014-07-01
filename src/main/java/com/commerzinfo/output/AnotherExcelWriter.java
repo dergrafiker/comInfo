@@ -1,7 +1,6 @@
 package com.commerzinfo.output;
 
-import com.commerzinfo.categorize.CategoryCollection;
-import com.commerzinfo.categorize.CategoryMatcher;
+import com.commerzinfo.CategoryCollection;
 import com.commerzinfo.data.DataRow;
 import com.google.common.collect.Multimap;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -29,7 +28,7 @@ public class AnotherExcelWriter {
     }
 
     private static void writeDataRows(Sheet sheet, Collection<DataRow> parsedRows, String startRefString) {
-        Multimap<String, DataRow> catToRows = CategoryMatcher.matchRowsToCategories(parsedRows);
+        Multimap<String, DataRow> catToRows = CategoryCollection.matchRowsToCategories(parsedRows);
         CellReference startRef = new CellReference(startRefString);
         AtomicInteger rowCounter = new AtomicInteger(startRef.getRow());
 

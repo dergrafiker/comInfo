@@ -1,7 +1,6 @@
 package com.commerzinfo.output;
 
-import com.commerzinfo.categorize.CategoryCollection;
-import com.commerzinfo.categorize.CategoryMatcher;
+import com.commerzinfo.CategoryCollection;
 import com.commerzinfo.data.DataRow;
 import com.google.common.collect.Multimap;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,7 +20,7 @@ public class ExcelWriter {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(ExcelWriter.class);
 
     public static void writeParsedRowsToFile(File file, Collection<DataRow> parsedRows) throws IOException {
-        Multimap<String, DataRow> catToRows = CategoryMatcher.matchRowsToCategories(parsedRows);
+        Multimap<String, DataRow> catToRows = CategoryCollection.matchRowsToCategories(parsedRows);
         Workbook wb = new HSSFWorkbook();
         createSheet(wb, "data", catToRows);
         ExcelUtil.writeWorkbookToFile(file, wb);

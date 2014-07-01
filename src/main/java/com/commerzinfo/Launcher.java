@@ -3,7 +3,6 @@ package com.commerzinfo;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
-import com.commerzinfo.categorize.CategoryCollection;
 import com.commerzinfo.data.CSVBean;
 import com.commerzinfo.data.DataRow;
 import com.commerzinfo.input.HTMLReader;
