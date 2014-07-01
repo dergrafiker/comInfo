@@ -10,18 +10,11 @@ import java.util.List;
 
 public class MyOptions {
 
-    @Option(name = "-r", usage = "enable folder recursion")
-    private boolean recursive;
-
     @Option(name = "-c", usage = "path to configFile", handler = FileOptionHandler.class)
     private File configFile = new File(new File("."), "config.properties");
 
     @Argument
     private List<String> arguments = Lists.newArrayList();
-
-    public boolean isRecursive() {
-        return recursive;
-    }
 
     public List<String> getArguments() {
         return arguments;
