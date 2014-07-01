@@ -10,6 +10,7 @@ import com.commerzinfo.output.AnotherExcelWriter;
 import com.commerzinfo.parse.BuchungszeilenParser;
 import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
+import com.commerzinfo.util.DecimalFormatUtil;
 import com.commerzinfo.util.FileCompressor;
 import com.google.common.collect.Lists;
 import net.htmlparser.jericho.HTMLElementName;
@@ -36,13 +37,11 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -186,9 +185,6 @@ ORDER BY D.BOOKING_TEXT;
 
         CsvToBean<CSVBean> csv = new CsvToBean<CSVBean>();
         List<CSVBean> csvBeanList = csv.parse(strat, csvReader);
-        DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance(Locale.GERMAN);
-        df.setNegativePrefix("-");
-        df.setPositivePrefix("+");
 
         for (CSVBean csvBean : csvBeanList) {
             try {
@@ -196,7 +192,7 @@ ORDER BY D.BOOKING_TEXT;
                 row.setBookingDate(DateUtil.parse(csvBean.getBuchungstag()));
                 row.setValueDate(DateUtil.parse(csvBean.getWertstellung()));
                 row.setBookingText(csvBean.getBuchungstext());
-                row.setValue(df.parse(csvBean.getBetrag()).doubleValue());
+                row.setValue(DecimalFormatUtil.parse(csvBean.getBetrag(), DecimalFormatUtil.Mode.CSV).doubleValue());
                 dataRows.add(row);
             } catch (ParseException e) {
                 logger.error("problem with datarow mapping", e);

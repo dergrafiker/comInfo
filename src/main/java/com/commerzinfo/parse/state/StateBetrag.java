@@ -16,7 +16,7 @@ public class StateBetrag extends ParseState {
 
     @Override
     public void doSomething(ParseStateContext stateContext, String input) throws Exception {
-        stateContext.getBuchungszeile().setValue(DecimalFormatUtil.parse(input).doubleValue());
+        stateContext.getBuchungszeile().setValue(DecimalFormatUtil.parse(input, DecimalFormatUtil.Mode.HTML).doubleValue());
         stateContext.setState(ParseStateContext.INITIAL_STATE);
     }
 }
