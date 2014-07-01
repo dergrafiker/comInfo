@@ -36,14 +36,7 @@ public class CategoryCollection {
                         String catName = split[0];
                         String regex = split[1];
 
-                        whitespaceMatcher.reset(regex);
-                        if (whitespaceMatcher.find()) {
-                            String oldValue = regex;
-                            regex = whitespaceMatcher.replaceAll("\\\\s+");
-                            regex = regex.trim();
-                            logger.info("replacing whitespaces " + oldValue + "=>" + regex);
-                        }
-                        Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher("");
+                        Matcher matcher = getMatcher(regex);
                         categoryMap.put(catName, matcher);
                     } else
                         throw new RuntimeException("split error");
@@ -55,6 +48,17 @@ public class CategoryCollection {
 
         categoryMap.put(CATCHALL, Pattern.compile(".*", Pattern.CASE_INSENSITIVE).matcher(""));
         return categoryMap;
+    }
+
+    private static Matcher getMatcher(String regex) {
+        whitespaceMatcher.reset(regex);
+        if (whitespaceMatcher.find()) {
+            String oldValue = regex;
+            regex = whitespaceMatcher.replaceAll("\\\\s+");
+            regex = regex.trim();
+            logger.info("replacing whitespaces " + oldValue + "=>" + regex);
+        }
+        return Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher("");
     }
 
     public static List<String> getAllCategoryNames() {
