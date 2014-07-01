@@ -83,8 +83,6 @@ public class Launcher {
                 }
 
                 insertRowsIntoDB(parsedRows, dsl);
-
-//                ExcelWriter.writeParsedRowsToFile(file, parsedRows);
                 AnotherExcelWriter.writeParsedRowsToFile(file, parsedRows);
             }
 
