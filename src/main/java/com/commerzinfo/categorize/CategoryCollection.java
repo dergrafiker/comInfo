@@ -13,11 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,20 +38,26 @@ public class CategoryCollection {
 
         if (configFile != null && configFile.isFile()) {
             try {
-                for (Map.Entry<String, String> entry : getPropertyMap(configFile).entrySet()) {
-                    String catName = entry.getKey();
-                    String regex = entry.getValue();
+                for (String line : FileUtils.readLines(configFile, "UTF-8")) {
+                    if (!line.contains("="))
+                        continue;
+                    final String[] split = line.split("=");
+                    if (split.length == 2) {
+                        String catName = split[0];
+                        String regex = split[1];
 
-                    whitespaceMatcher.reset(regex);
-                    if (whitespaceMatcher.find()) {
-                        String oldValue = regex;
-                        regex = whitespaceMatcher.replaceAll("\\\\s+");
-                        logger.info("replacing whitespaces " + oldValue + "=>" + regex);
-                    }
-
-                    Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher("");
-                    categoryMap.put(catName, matcher);
-                    addCat(allCategories, catName, PredicateUtil.findPatternPredicate(regex));
+                        whitespaceMatcher.reset(regex);
+                        if (whitespaceMatcher.find()) {
+                            String oldValue = regex;
+                            regex = whitespaceMatcher.replaceAll("\\\\s+");
+                            regex = regex.trim();
+                            logger.info("replacing whitespaces " + oldValue + "=>" + regex);
+                        }
+                        Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher("");
+                        categoryMap.put(catName, matcher);
+                        addCat(allCategories, catName, PredicateUtil.findPatternPredicate(regex));
+                    } else
+                        throw new RuntimeException("split error");
                 }
             } catch (Exception e) {
                 throw new RuntimeException("configFile=" + configFile.getAbsolutePath(), e);
@@ -63,17 +67,6 @@ public class CategoryCollection {
         addCat(allCategories, CATCHALL, Predicates.<DataRow>alwaysTrue());
         categoryMap.put(CATCHALL, Pattern.compile(".*", Pattern.CASE_INSENSITIVE).matcher(""));
         return allCategories;
-    }
-
-    private static Map<String, String> getPropertyMap(File configFile) throws IOException {
-        Map<String, String> propertyMap = new LinkedHashMap<String, String>();
-        for (String line : FileUtils.readLines(configFile, "UTF-8")) {
-            if (!line.contains("="))
-                continue;
-            final String[] split = line.split("=");
-            propertyMap.put(split[0], split[1]);
-        }
-        return propertyMap;
     }
 
     private static void addCat(Collection<Category> categoryCollection, String categoryName, Predicate<DataRow> predicate) {
