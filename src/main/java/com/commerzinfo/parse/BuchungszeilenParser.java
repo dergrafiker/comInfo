@@ -4,11 +4,12 @@ import com.commerzinfo.data.DataRow;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
+import java.util.List;
 
 public class BuchungszeilenParser {
 
-    public static Collection<DataRow> parseRows(Collection<String> inputRows) {
-        Collection<DataRow> buchungsZeilen = Lists.newLinkedList();
+    public static List<DataRow> parseRows(Collection<String> inputRows) {
+        List<DataRow> buchungsZeilen = Lists.newArrayList();
 
         ParseStateContext ctx = new ParseStateContext();
 

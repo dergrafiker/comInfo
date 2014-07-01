@@ -1,11 +1,11 @@
 package com.commerzinfo;
 
+import com.google.common.collect.Lists;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.FileOptionHandler;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyOptions {
@@ -17,7 +17,7 @@ public class MyOptions {
     private File configFile = new File(new File("."), "config.properties");
 
     @Argument
-    private List<String> arguments = new ArrayList<String>();
+    private List<String> arguments = Lists.newArrayList();
 
     public boolean isRecursive() {
         return recursive;

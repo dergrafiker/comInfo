@@ -12,6 +12,7 @@ import com.commerzinfo.parse.BuchungszeilenParser;
 import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.FileCompressor;
+import com.google.common.collect.Lists;
 import net.htmlparser.jericho.HTMLElementName;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -38,7 +39,6 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,23 +63,22 @@ public class Launcher {
 
             CategoryCollection.createCategories(myOptions.getConfigFile()); //init
 
-            List<File> fileList = new ArrayList<File>();
+            List<File> fileList = Lists.newArrayList();
             for (String s : myOptions.getArguments()) {
                 fileList.addAll(FileUtils.listFiles(new File(s), Constants.ALLOWED_FILE_FILTER, TrueFileFilter.INSTANCE));
             }
 
             fileList = FileCompressor.compressFiles(fileList, ".bz2");
             Collections.sort(fileList, Collections.reverseOrder());
-            String elementToSearch = HTMLElementName.SPAN;
 
             Class.forName(org.h2.Driver.class.getName());
             conn = DriverManager.getConnection("jdbc:h2:~/cominfo", "sa", "");
             DSLContext dsl = DSL.using(conn, SQLDialect.H2);
 
             for (File file : fileList) {
-                Collection<DataRow> parsedRows = Collections.EMPTY_LIST;
+                List<DataRow> parsedRows = Lists.newArrayList();
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
-                    parsedRows = handleHTML(elementToSearch, file);
+                    parsedRows = handleHTML(HTMLElementName.SPAN, file);
                 } else if (Constants.CSV_FILE_FILTER.accept(file)) {
                     parsedRows = handleCSV(file);
                 }
@@ -165,17 +164,17 @@ ORDER BY D.BOOKING_TEXT;
         }
     }
 
-    private static Collection<DataRow> handleHTML(String elementToSearch, File file) throws IOException {
-        Collection<DataRow> parsedRows;
-        Collection<String> elementsFromFile = HTMLReader.getElementsFromFile(file, elementToSearch);
+    private static List<DataRow> handleHTML(String elementToSearch, File file) throws IOException {
+        List<DataRow> parsedRows;
+        List<String> elementsFromFile = HTMLReader.getElementsFromFile(file, elementToSearch);
         logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
         parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
         logger.info(file + " has " + parsedRows.size() + " parsed rows");
         return parsedRows;
     }
 
-    private static Collection<DataRow> handleCSV(File file) throws IOException {
-        Collection<DataRow> dataRows = new ArrayList<DataRow>();
+    private static List<DataRow> handleCSV(File file) throws IOException {
+        List<DataRow> dataRows = Lists.newArrayList();
 
         CSVReader csvReader = new CSVReader(new InputStreamReader(CompressionUtil.getCorrectInputStream(file), "UTF-8"), ';', '"');
         HeaderColumnNameTranslateMappingStrategy<CSVBean> strat = new HeaderColumnNameTranslateMappingStrategy<CSVBean>();

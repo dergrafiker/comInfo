@@ -1,12 +1,12 @@
 package com.commerzinfo;
 
+import com.google.common.collect.Lists;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LauncherTest {
@@ -14,7 +14,7 @@ public class LauncherTest {
     @Ignore
     @Test
     public void testMain() throws Exception {
-        List<String> args = new ArrayList<String>();
+        List<String> args = Lists.newArrayList();
 
         URL inputDirResource = LauncherTest.class.getClassLoader().getResource("testdata");
         Assert.assertNotNull(inputDirResource);

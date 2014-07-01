@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 public class HTMLReader {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(HTMLReader.class);
@@ -25,7 +25,7 @@ public class HTMLReader {
         MasonTagTypes.register();
     }
 
-    public static Collection<String> getElementsFromFile(File file, String element) throws IOException {
+    public static List<String> getElementsFromFile(File file, String element) throws IOException {
         if (logger.isInfoEnabled())
             logger.info("READING FILE " + file.getAbsolutePath());
         if (!Constants.HTML_FILE_FILTER.accept(file)) {
@@ -34,7 +34,7 @@ public class HTMLReader {
         }
 
         Source source = new Source(CompressionUtil.getCorrectInputStream(file));
-        Collection<String> lines = Lists.newLinkedList();
+        List<String> lines = Lists.newArrayList();
         for (Element currentElement : source.getAllElements(element)) {
             lines.add(currentElement.getContent().toString());
         }
