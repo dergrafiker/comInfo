@@ -9,9 +9,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ExcelUtil {
@@ -22,16 +24,16 @@ public final class ExcelUtil {
 
     public static void writeWorkbookToFile(File inFile, Workbook wb) throws IOException {
         File excelFile = createExcelFile(inFile);
-        FileOutputStream fileOut = null;
+        OutputStream outputStream = null;
 
         try {
-            fileOut = new FileOutputStream(excelFile);
-            wb.write(fileOut);
+            outputStream = new BufferedOutputStream(new FileOutputStream(excelFile));
+            wb.write(outputStream);
             if (logger.isInfoEnabled()) {
                 logger.info("WRITING OF FILE " + excelFile.getName() + " was succesful");
             }
         } finally {
-            IOUtils.closeQuietly(fileOut);
+            IOUtils.closeQuietly(outputStream);
         }
     }
 
