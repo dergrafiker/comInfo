@@ -13,7 +13,6 @@ import net.htmlparser.jericho.Source;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +33,7 @@ public class HTMLParser {
                     " does not match " + StringUtils.join(Constants.HTML_PATTERNS, ','));
         }
 
-        Source source = new Source(new BufferedInputStream(CompressionUtil.getCorrectInputStream(file)));
+        Source source = new Source(CompressionUtil.getCorrectInputStream(file));
         List<String> lines = Lists.newArrayList();
         for (Element currentElement : source.getAllElements(element)) {
             lines.add(currentElement.getContent().toString());
