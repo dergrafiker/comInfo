@@ -1,6 +1,7 @@
 package com.commerzinfo;
 
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -10,7 +11,7 @@ public class DataRow {
     private Date bookingDate;
     private String bookingText;
     private Date valueDate;
-    private Double value;
+    private BigDecimal value;
 
     public Date getBookingDate() {
         return bookingDate;
@@ -36,11 +37,11 @@ public class DataRow {
         this.valueDate = valueDate;
     }
 
-    public Double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 

@@ -13,9 +13,11 @@ public final class DecimalFormatUtil {
         HTML_FORMAT.setNegativePrefix("");
         HTML_FORMAT.setNegativeSuffix("-");
         HTML_FORMAT.setPositiveSuffix("+");
+        HTML_FORMAT.setParseBigDecimal(true);
 
         CSV_FORMAT.setNegativePrefix("-");
         CSV_FORMAT.setPositivePrefix("+");
+        CSV_FORMAT.setParseBigDecimal(true);
     }
 
     private DecimalFormatUtil() {

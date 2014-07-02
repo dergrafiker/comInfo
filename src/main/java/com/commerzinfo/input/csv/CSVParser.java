@@ -44,7 +44,7 @@ public class CSVParser {
                 row.setBookingDate(DateUtil.parse(csvBean.getBuchungstag()));
                 row.setValueDate(DateUtil.parse(csvBean.getWertstellung()));
                 row.setBookingText(csvBean.getBuchungstext());
-                row.setValue(DecimalFormatUtil.parse(csvBean.getBetrag(), DecimalFormatUtil.Mode.CSV).doubleValue());
+                row.setValue((java.math.BigDecimal) DecimalFormatUtil.parse(csvBean.getBetrag(), DecimalFormatUtil.Mode.CSV));
                 dataRows.add(row);
             } catch (ParseException e) {
                 logger.error("problem with datarow mapping", e);

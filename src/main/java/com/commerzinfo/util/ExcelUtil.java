@@ -81,7 +81,7 @@ public final class ExcelUtil {
         cell.setCellValue(dataRow.getBookingDate());
 
         cell = ExcelUtil.createCell(row, cellCounter);
-        cell.setCellValue(dataRow.getValue());
+        cell.setCellValue(dataRow.getValue().doubleValue());
 
         cell = ExcelUtil.createCell(row, cellCounter);
         cell.setCellValue(dataRow.getBookingText());

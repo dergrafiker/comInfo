@@ -13,7 +13,6 @@ import org.jooq.h2.generated.tables.records.DatarowRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class DBWriter {
         for (DataRow p : parsedRows) {
             try {
                 dsl.insertInto(Datarow.DATAROW)
-                        .set(Datarow.DATAROW.BOOKING_VALUE, BigDecimal.valueOf(p.getValue()))
+                        .set(Datarow.DATAROW.BOOKING_VALUE, p.getValue())
                         .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
                         .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
                         .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
