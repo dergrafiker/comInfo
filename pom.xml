@@ -132,7 +132,7 @@
                             </includes>
                         </filter>
                     </filters>
-                    <finalName>${artifactId}-${maven.build.timestamp}-${git.buildnumber}</finalName>
+                    <finalName>${artifactId}-${git.buildnumber}</finalName>
                     <transformers>
                         <transformer
                                 implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
