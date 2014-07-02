@@ -22,8 +22,10 @@ import java.util.Map;
 
 public class CSVParser {
     private static final CsvToBean<CSVBean> csvToBean = new CsvToBean<CSVBean>();
+    private static final MappingStrategy<CSVBean> mappingStrategy = initStrategy();
+    private static Logger logger = LoggerFactory.getLogger(CSVParser.class);
 
-    static {
+    private static HeaderColumnNameTranslateMappingStrategy<CSVBean> initStrategy() {
         final HeaderColumnNameTranslateMappingStrategy<CSVBean> translateMappingStrategy = new HeaderColumnNameTranslateMappingStrategy<CSVBean>();
         translateMappingStrategy.setType(CSVBean.class);
         Map<String, String> map = new HashMap<String, String>();
@@ -33,10 +35,8 @@ public class CSVParser {
         map.put("Betrag", "betrag");
         map.put("Währung", "waehrung");
         translateMappingStrategy.setColumnMapping(map);
-        mappingStrategy = translateMappingStrategy;
+        return translateMappingStrategy;
     }
-    private static Logger logger = LoggerFactory.getLogger(CSVParser.class);
-    private static MappingStrategy<CSVBean> mappingStrategy = null;
 
     public static List<DataRow> handleCSV(File file) throws IOException {
         List<DataRow> dataRows = Lists.newArrayList();
