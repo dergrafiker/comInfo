@@ -50,6 +50,7 @@ public class CSVParser {
                 logger.error("problem with datarow mapping", e);
             }
         }
+        logger.info("{} has {} parsed rows", file.getAbsolutePath(), dataRows.size());
         return dataRows;
     }
 }

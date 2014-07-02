@@ -60,6 +60,7 @@ public class DBWriter {
     }
 
     public static void insertRowsIntoDB(Collection<DataRow> parsedRows, DSLContext dsl) {
+        int insertCount = 0, duplicateCount = 0;
         for (DataRow p : parsedRows) {
             try {
                 dsl.insertInto(Datarow.DATAROW)
@@ -67,14 +68,16 @@ public class DBWriter {
                         .set(Datarow.DATAROW.BOOKING_TEXT, p.getBookingText())
                         .set(Datarow.DATAROW.BOOKING_DATE, new Date(p.getBookingDate().getTime()))
                         .set(Datarow.DATAROW.VALUE_DATE, new Date(p.getValueDate().getTime())).execute();
-
+                insertCount++;
             } catch (DataAccessException dae) {
                 boolean isDuplicate = StringUtils.contains(dae.getMessage(), "Unique index or primary key violation");
-                if (isDuplicate)
-                    logger.warn("duplicate row: {}", p);
-                else
+                if (isDuplicate) {
+                    logger.trace("duplicate row: {}", p);
+                    duplicateCount++;
+                } else
                     throw dae;
             }
         }
+        logger.info("has {} inserts and {} duplicates", insertCount, duplicateCount);
     }
 }

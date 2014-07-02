@@ -28,8 +28,6 @@ public class HTMLParser {
     }
 
     private static List<String> getElementsFromFile(File file, String element) throws IOException {
-        if (logger.isInfoEnabled())
-            logger.info("READING FILE " + file.getAbsolutePath());
         if (!Constants.HTML_FILE_FILTER.accept(file)) {
             throw new IllegalArgumentException(file.getAbsolutePath() +
                     " does not match " + StringUtils.join(Constants.HTML_PATTERNS, ','));

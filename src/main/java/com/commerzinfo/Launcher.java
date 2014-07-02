@@ -51,6 +51,8 @@ public class Launcher {
             DSLContext dsl = DSL.using(conn, SQLDialect.H2);
 
             for (File file : fileList) {
+                logger.info("READING FILE {}", file.getAbsolutePath());
+
                 List<DataRow> parsedRows = Lists.newArrayList();
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
                     parsedRows = HTMLParser.handleHTML(HTMLElementName.SPAN, file);
