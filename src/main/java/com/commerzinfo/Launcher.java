@@ -47,7 +47,7 @@ public class Launcher {
             Collections.sort(fileList, Collections.reverseOrder());
 
             Class.forName(org.h2.Driver.class.getName());
-            conn = DriverManager.getConnection("jdbc:h2:~/cominfo", "sa", "");
+            conn = DriverManager.getConnection("jdbc:h2:~/cominfo;AUTO_SERVER=TRUE", "sa", "");
             DSLContext dsl = DSL.using(conn, SQLDialect.H2);
 
             for (File file : fileList) {
