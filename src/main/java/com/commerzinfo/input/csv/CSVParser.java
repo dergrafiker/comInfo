@@ -9,11 +9,13 @@ import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.DecimalFormatUtil;
 import com.google.common.collect.Lists;
+import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -42,7 +44,9 @@ public class CSVParser {
         List<DataRow> dataRows = Lists.newArrayList();
         CSVReader csvReader = null;
         try {
-            csvReader = new CSVReader(new InputStreamReader(CompressionUtil.getCorrectInputStream(file), "UTF-8"), ';', '"');
+            InputStream in = CompressionUtil.getCorrectInputStream(file);
+            in = new BOMInputStream(in, false); //exclude UTF-8 BOM
+            csvReader = new CSVReader(new InputStreamReader(in, "UTF-8"), ';', '"');
             List<CSVBean> csvBeanList = csvToBean.parse(mappingStrategy, csvReader);
 
             for (CSVBean csvBean : csvBeanList) {

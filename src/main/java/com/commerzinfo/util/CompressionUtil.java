@@ -7,12 +7,10 @@ import org.apache.commons.compress.compressors.gzip.GzipUtils;
 import org.apache.commons.compress.utils.ArchiveUtils;
 import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PushbackInputStream;
 
 public final class CompressionUtil {
     private CompressionUtil() {
@@ -25,7 +23,6 @@ public final class CompressionUtil {
         } else if (BZip2Utils.isCompressedFilename(inputFile.getName())) {
             fis = new BZip2CompressorInputStream(fis, true);
         }
-        fis = checkForUtf8BOMAndDiscardIfAny(fis);
         return fis;
     }
 
@@ -38,16 +35,5 @@ public final class CompressionUtil {
         byte[] inBytes = IOUtils.toByteArray(getCorrectInputStream(one));
         byte[] outBytes = IOUtils.toByteArray(getCorrectInputStream(another));
         return ArchiveUtils.isEqual(inBytes, outBytes);
-    }
-
-    private static InputStream checkForUtf8BOMAndDiscardIfAny(InputStream inputStream) throws IOException {
-        PushbackInputStream pushbackInputStream = new PushbackInputStream(new BufferedInputStream(inputStream), 3);
-        byte[] bom = new byte[3];
-        if (pushbackInputStream.read(bom) != -1) {
-            if (!(bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF)) {
-                pushbackInputStream.unread(bom);
-            }
-        }
-        return pushbackInputStream;
     }
 }
