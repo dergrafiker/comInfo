@@ -16,7 +16,6 @@ public final class DecimalFormatUtil {
         HTML_FORMAT.setParseBigDecimal(true);
 
         CSV_FORMAT.setNegativePrefix("-");
-        CSV_FORMAT.setPositivePrefix("+");
         CSV_FORMAT.setParseBigDecimal(true);
     }
 
