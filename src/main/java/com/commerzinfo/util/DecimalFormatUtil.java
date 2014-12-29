@@ -23,12 +23,17 @@ public final class DecimalFormatUtil {
     }
 
     public static Number parse(String source, Mode mode) throws ParseException {
-        if (Mode.HTML.equals(mode))
+        if (Mode.HTML.equals(mode)) {
             return HTML_FORMAT.parse(source);
-        else if (Mode.CSV.equals(mode))
+        } else if (Mode.CSV.equals(mode)) {
+            //some rows have a pos prefix some dont. so just remove it for every row
+            if (source.contains("+")) {
+                source = source.replaceAll("\\+", "");
+            }
             return CSV_FORMAT.parse(source);
-        else
+        } else {
             return null;
+        }
     }
 
     public enum Mode {
