@@ -50,6 +50,8 @@ public class Launcher {
             conn = DriverManager.getConnection("jdbc:h2:~/cominfo;AUTO_SERVER=TRUE", "sa", "");
             DSLContext dsl = DSL.using(conn, SQLDialect.H2);
 
+            DBWriter.emptyAllTables(dsl);
+
             for (File file : fileList) {
                 logger.info("READING FILE {}", file.getAbsolutePath());
 

@@ -5,7 +5,9 @@ import com.commerzinfo.DataRow;
 import org.apache.commons.lang.StringUtils;
 import org.jooq.Cursor;
 import org.jooq.DSLContext;
+import org.jooq.Table;
 import org.jooq.exception.DataAccessException;
+import org.jooq.h2.generated.Cominfo;
 import org.jooq.h2.generated.tables.Category;
 import org.jooq.h2.generated.tables.Datarow;
 import org.jooq.h2.generated.tables.records.CategoryRecord;
@@ -20,6 +22,14 @@ import java.util.regex.Matcher;
 
 public class DBWriter {
     private static Logger logger = LoggerFactory.getLogger(DBWriter.class);
+
+    public static void emptyAllTables(DSLContext dsl) {
+        logger.info("Deleting all tables {}", Cominfo.COMINFO.getTables());
+        for (Table<?> table : Cominfo.COMINFO.getTables()) {
+            dsl.delete(table).execute();
+        }
+        logger.info("Deleting finished");
+    }
 
     public static void assignCategories(DSLContext dsl) {
         Cursor<DatarowRecord> cursor = dsl.selectFrom(Datarow.DATAROW).fetchLazy();
