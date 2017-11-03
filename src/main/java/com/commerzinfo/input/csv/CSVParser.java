@@ -42,11 +42,11 @@ public class CSVParser {
 
     public static List<DataRow> handleCSV(File file) throws IOException {
         List<DataRow> dataRows = Lists.newArrayList();
-        CSVReader csvReader = null;
-        try {
-            InputStream in = CompressionUtil.getCorrectInputStream(file);
-            in = new BOMInputStream(in, false); //exclude UTF-8 BOM
-            csvReader = new CSVReader(new InputStreamReader(in, "UTF-8"), ';', '"');
+        try (
+                InputStream inputStream = CompressionUtil.getCorrectInputStream(file);
+                BOMInputStream bomInputStream = new BOMInputStream(inputStream, false); //exclude UTF-8 BOM
+                CSVReader csvReader = new CSVReader(new InputStreamReader(bomInputStream, "UTF-8"), ';', '"');
+        ) {
             List<CSVBean> csvBeanList = csvToBean.parse(mappingStrategy, csvReader);
 
             for (CSVBean csvBean : csvBeanList) {
@@ -60,10 +60,6 @@ public class CSVParser {
                 } catch (ParseException e) {
                     logger.error("problem with datarow mapping", e);
                 }
-            }
-        } finally {
-            if (csvReader != null) {
-                csvReader.close();
             }
         }
         logger.info("{} has {} parsed rows", file.getAbsolutePath(), dataRows.size());
