@@ -1,7 +1,7 @@
 package com.commerzinfo.input.html.parse.state;
 
 import com.commerzinfo.input.html.parse.ParseStateContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class StateBuchungstext extends ParseState {
     public StateBuchungstext() {

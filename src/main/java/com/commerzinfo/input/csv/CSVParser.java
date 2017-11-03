@@ -1,9 +1,9 @@
 package com.commerzinfo.input.csv;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.bean.CsvToBean;
-import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
-import au.com.bytecode.opencsv.bean.MappingStrategy;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
+import com.opencsv.bean.MappingStrategy;
 import com.commerzinfo.DataRow;
 import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
