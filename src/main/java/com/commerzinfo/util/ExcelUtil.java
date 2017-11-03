@@ -24,16 +24,14 @@ public final class ExcelUtil {
 
     public static void writeWorkbookToFile(File inFile, Workbook wb) throws IOException {
         File excelFile = createExcelFile(inFile);
-        OutputStream outputStream = null;
 
-        try {
-            outputStream = new BufferedOutputStream(new FileOutputStream(excelFile));
-            wb.write(outputStream);
-            if (logger.isInfoEnabled()) {
-                logger.info("WRITING OF FILE " + excelFile.getName() + " was succesful");
+        try (FileOutputStream fileOutputStream = new FileOutputStream(excelFile)) {
+            try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)) {
+                wb.write(bufferedOutputStream);
+                if (logger.isInfoEnabled()) {
+                    logger.info("WRITING OF FILE " + excelFile.getName() + " was successful");
+                }
             }
-        } finally {
-            IOUtils.closeQuietly(outputStream);
         }
     }
 

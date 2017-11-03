@@ -42,23 +42,24 @@ public class CSVParser {
 
     public static List<DataRow> handleCSV(File file) throws IOException {
         List<DataRow> dataRows = Lists.newArrayList();
-        try (
-                InputStream inputStream = CompressionUtil.getCorrectInputStream(file);
-                BOMInputStream bomInputStream = new BOMInputStream(inputStream, false); //exclude UTF-8 BOM
-                CSVReader csvReader = new CSVReader(new InputStreamReader(bomInputStream, "UTF-8"), ';', '"');
-        ) {
-            List<CSVBean> csvBeanList = csvToBean.parse(mappingStrategy, csvReader);
+        try (InputStream inputStream = CompressionUtil.getCorrectInputStream(file)) {
+            try (BOMInputStream bomInputStream = new BOMInputStream(inputStream, false)) {
+                try (CSVReader csvReader = new CSVReader(new InputStreamReader(bomInputStream, "UTF-8"), ';', '"')) {
+                    List<CSVBean> csvBeanList = csvToBean.parse(mappingStrategy, csvReader);
 
-            for (CSVBean csvBean : csvBeanList) {
-                try {
-                    DataRow row = new DataRow();
-                    row.setBookingDate(DateUtil.parse(csvBean.getBuchungstag()));
-                    row.setValueDate(DateUtil.parse(csvBean.getWertstellung()));
-                    row.setBookingText(csvBean.getBuchungstext());
-                    row.setValue((java.math.BigDecimal) DecimalFormatUtil.parse(csvBean.getBetrag(), DecimalFormatUtil.Mode.CSV));
-                    dataRows.add(row);
-                } catch (ParseException e) {
-                    logger.error("problem with datarow mapping", e);
+                    for (CSVBean csvBean : csvBeanList) {
+                        try {
+                            DataRow row = new DataRow();
+                            row.setBookingDate(DateUtil.parse(csvBean.getBuchungstag()));
+                            row.setValueDate(DateUtil.parse(csvBean.getWertstellung()));
+                            row.setBookingText(csvBean.getBuchungstext());
+                            row.setValue((java.math.BigDecimal) DecimalFormatUtil.parse(csvBean.getBetrag(),
+                                                                                        DecimalFormatUtil.Mode.CSV));
+                            dataRows.add(row);
+                        } catch (ParseException e) {
+                            logger.error("problem with datarow mapping", e);
+                        }
+                    }
                 }
             }
         }
