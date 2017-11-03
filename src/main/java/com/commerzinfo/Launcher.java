@@ -3,22 +3,17 @@ package com.commerzinfo;
 import com.commerzinfo.input.csv.CSVParser;
 import com.commerzinfo.input.html.HTMLParser;
 import com.commerzinfo.output.AnotherExcelWriter;
-import com.commerzinfo.output.DBWriter;
 import com.commerzinfo.util.FileCompressor;
 import com.google.common.collect.Lists;
 import net.htmlparser.jericho.HTMLElementName;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,12 +41,6 @@ public class Launcher {
             fileList = FileCompressor.compressFiles(fileList, ".bz2");
             Collections.sort(fileList, Collections.reverseOrder());
 
-            Class.forName(org.h2.Driver.class.getName());
-            conn = DriverManager.getConnection("jdbc:h2:~/cominfo;AUTO_SERVER=TRUE", "sa", "");
-            DSLContext dsl = DSL.using(conn, SQLDialect.H2);
-
-            DBWriter.emptyAllTables(dsl);
-
             for (File file : fileList) {
                 logger.info("READING FILE {}", file.getAbsolutePath());
 
@@ -61,13 +50,8 @@ public class Launcher {
                 } else if (Constants.CSV_FILE_FILTER.accept(file)) {
                     parsedRows = CSVParser.handleCSV(file);
                 }
-
-                DBWriter.insertRowsIntoDB(parsedRows, dsl);
                 AnotherExcelWriter.writeParsedRowsToFile(file, parsedRows);
             }
-
-            DBWriter.buildCategories(dsl);
-            DBWriter.assignCategories(dsl);
         } catch (Exception e) {
             logger.error("an error occurred while launching the program", e);
             throw e;
