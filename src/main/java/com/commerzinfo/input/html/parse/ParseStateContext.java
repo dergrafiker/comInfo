@@ -17,7 +17,7 @@ public class ParseStateContext {
     public static final ParseState BUCHUNGSTEXT_STATE = new StateBuchungstext();
     public static final ParseState VALUTA_STATE = new StateValuta();
     public static final ParseState BETRAG_STATE = new StateBetrag();
-    private static Logger logger = LoggerFactory.getLogger(ParseStateContext.class);
+    private static final Logger logger = LoggerFactory.getLogger(ParseStateContext.class);
     private DataRow buchungszeile;
 
     public ParseStateContext() {

@@ -20,10 +20,10 @@ public class CategoryCollection {
     public static final String CATCHALL = "catchall";
     private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
     private static final LinkedHashMap<String, Matcher> categoryMap = Maps.newLinkedHashMap();
-    private static Logger logger = LoggerFactory.getLogger(CategoryCollection.class);
+    private static final Logger logger = LoggerFactory.getLogger(CategoryCollection.class);
 
     @SuppressWarnings("unchecked")
-    public static Map<String, Matcher> createCategories(File configFile) {
+    public static void createCategories(File configFile) {
         if (configFile != null && configFile.isFile()) {
             categoryMap.clear();
             try {
@@ -46,7 +46,6 @@ public class CategoryCollection {
         }
 
         categoryMap.put(CATCHALL, Pattern.compile(".*", Pattern.CASE_INSENSITIVE).matcher(""));
-        return categoryMap;
     }
 
     private static Matcher getMatcher(String regex) {
@@ -62,10 +61,6 @@ public class CategoryCollection {
 
     public static List<String> getAllCategoryNames() {
         return Lists.newArrayList(categoryMap.keySet());
-    }
-
-    public static LinkedHashMap<String, Matcher> getCategoryMap() {
-        return categoryMap;
     }
 
     public static Multimap<String, DataRow> matchRowsToCategories(Collection<DataRow> parsedRows) {

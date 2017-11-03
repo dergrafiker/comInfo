@@ -11,10 +11,6 @@ public final class DateUtil {
 
     private static final DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.GERMAN);
 
-    public static String format(Date date) {
-        return dateInstance.format(date);
-    }
-
     public static Date parse(String source) throws ParseException {
         return dateInstance.parse(source);
     }

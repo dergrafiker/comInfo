@@ -11,10 +11,10 @@ import java.util.List;
 public class MyOptions {
 
     @Option(name = "-c", usage = "path to configFile", handler = FileOptionHandler.class)
-    private File configFile = new File(new File("."), "config.properties");
+    private final File configFile = new File(new File("."), "config.properties");
 
     @Argument
-    private List<String> arguments = Lists.newArrayList();
+    private final List<String> arguments = Lists.newArrayList();
 
     public List<String> getArguments() {
         return arguments;

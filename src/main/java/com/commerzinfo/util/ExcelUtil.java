@@ -17,7 +17,7 @@ import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ExcelUtil {
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
 
     private ExcelUtil() {
     }
@@ -42,6 +42,7 @@ public final class ExcelUtil {
         String newFilename = inFile.getName() + ".xls";
 
         File excelFile = new File(parentFile, newFilename);
+        //noinspection ResultOfMethodCallIgnored
         excelFile.createNewFile();
 
         return excelFile;

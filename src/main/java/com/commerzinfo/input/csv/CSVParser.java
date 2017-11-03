@@ -23,14 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVParser {
-    private static final CsvToBean<CSVBean> csvToBean = new CsvToBean<CSVBean>();
+    private static final CsvToBean<CSVBean> csvToBean = new CsvToBean<>();
     private static final MappingStrategy<CSVBean> mappingStrategy = initStrategy();
-    private static Logger logger = LoggerFactory.getLogger(CSVParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(CSVParser.class);
 
     private static HeaderColumnNameTranslateMappingStrategy<CSVBean> initStrategy() {
-        final HeaderColumnNameTranslateMappingStrategy<CSVBean> translateMappingStrategy = new HeaderColumnNameTranslateMappingStrategy<CSVBean>();
+        final HeaderColumnNameTranslateMappingStrategy<CSVBean> translateMappingStrategy = new HeaderColumnNameTranslateMappingStrategy<>();
         translateMappingStrategy.setType(CSVBean.class);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("Buchungstag", "buchungstag");
         map.put("Wertstellung", "wertstellung");
         map.put("Buchungstext", "buchungstext");

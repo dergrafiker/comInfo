@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class HTMLParser {
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(HTMLParser.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HTMLParser.class);
 
     static {
         MicrosoftConditionalCommentTagTypes.register();

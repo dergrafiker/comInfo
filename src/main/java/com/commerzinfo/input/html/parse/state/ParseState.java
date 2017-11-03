@@ -3,7 +3,7 @@ package com.commerzinfo.input.html.parse.state;
 import com.commerzinfo.input.html.parse.ParseStateContext;
 
 public abstract class ParseState {
-    private String stateName;
+    private final String stateName;
 
     protected ParseState(String stateName) {
         this.stateName = stateName;

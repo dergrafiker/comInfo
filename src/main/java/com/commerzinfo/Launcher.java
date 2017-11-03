@@ -13,15 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.sql.Connection;
 import java.util.Collections;
 import java.util.List;
 
 public class Launcher {
-    private static Logger logger = LoggerFactory.getLogger(Launcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
 
     public static void main(String[] args) throws Exception {
-        Connection conn = null;
         try {
             MyOptions myOptions = new MyOptions();
             CmdLineParser parser = new CmdLineParser(myOptions);
@@ -39,7 +37,7 @@ public class Launcher {
             }
 
             fileList = FileCompressor.compressFiles(fileList, ".bz2");
-            Collections.sort(fileList, Collections.reverseOrder());
+            fileList.sort(Collections.reverseOrder());
 
             for (File file : fileList) {
                 logger.info("READING FILE {}", file.getAbsolutePath());
@@ -55,9 +53,6 @@ public class Launcher {
         } catch (Exception e) {
             logger.error("an error occurred while launching the program", e);
             throw e;
-        } finally {
-            if (conn != null)
-                conn.close();
         }
     }
 }
