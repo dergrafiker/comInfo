@@ -20,13 +20,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SuppressWarnings("SameParameterValue")
 public class AnotherExcelWriter {
     public static void writeParsedRowsToFile(File file, Collection<DataRow> parsedRows) throws IOException {
-        Workbook wb = new HSSFWorkbook();
-        Sheet sheet = wb.createSheet("data");
+        try (Workbook wb = new HSSFWorkbook()) {
+            Sheet sheet = wb.createSheet("data");
 
-        writeCategorySummary(sheet, "A1", "D:D", "F:F");
-        writeDataRows(sheet, parsedRows, "D1");
+            writeCategorySummary(sheet, "A1", "D:D", "F:F");
+            writeDataRows(sheet, parsedRows, "D1");
 
-        ExcelUtil.writeWorkbookToFile(file, wb);
+            ExcelUtil.writeWorkbookToFile(file, wb);
+        }
     }
 
     private static void writeDataRows(Sheet sheet, Collection<DataRow> parsedRows, String startRefString) {

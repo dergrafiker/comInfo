@@ -26,12 +26,12 @@ public final class CompressionUtil {
         return fis;
     }
 
-    public static boolean isCompressed(File inputFile) {
+    static boolean isCompressed(File inputFile) {
         String name = inputFile.getName();
         return BZip2Utils.isCompressedFilename(name) || GzipUtils.isCompressedFilename(name);
     }
 
-    public static boolean contentIsEqual(File one, File another) throws IOException {
+    static boolean contentIsEqual(File one, File another) throws IOException {
         byte[] inBytes = IOUtils.toByteArray(getCorrectInputStream(one));
         byte[] outBytes = IOUtils.toByteArray(getCorrectInputStream(another));
         return ArchiveUtils.isEqual(inBytes, outBytes);

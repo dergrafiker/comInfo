@@ -16,11 +16,11 @@ class MyOptions {
     @Argument
     private final List<String> arguments = Lists.newArrayList();
 
-    public List<String> getArguments() {
+    List<String> getArguments() {
         return arguments;
     }
 
-    public File getConfigFile() {
+    File getConfigFile() {
         return configFile;
     }
 }

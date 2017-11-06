@@ -44,9 +44,14 @@ public class HTMLParser {
     public static List<DataRow> handleHTML(String elementToSearch, File file) throws IOException {
         List<DataRow> parsedRows;
         List<String> elementsFromFile = HTMLParser.getElementsFromFile(file, elementToSearch);
-        logger.info(file + " has " + elementsFromFile.size() + " elements of type: " + elementToSearch);
+        if (logger.isInfoEnabled()) {
+            logger.info(String.format("%s has %d elements of type: %s",
+                                      file, elementsFromFile.size(), elementToSearch));
+        }
         parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
-        logger.info(file + " has " + parsedRows.size() + " parsed rows");
+        if (logger.isInfoEnabled()) {
+            logger.info(String.format("%s has %d parsed rows", file, parsedRows.size()));
+        }
         return parsedRows;
     }
 }

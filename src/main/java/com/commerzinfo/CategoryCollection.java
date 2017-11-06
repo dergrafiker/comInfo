@@ -54,7 +54,9 @@ public class CategoryCollection {
             String oldValue = regex;
             regex = whitespaceMatcher.replaceAll("\\\\s+");
             regex = regex.trim();
-            logger.info("replacing whitespaces " + oldValue + "=>" + regex);
+            if (logger.isInfoEnabled()) {
+                logger.info(String.format("replacing whitespaces %s=>%s", oldValue, regex));
+            }
         }
         return Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher("");
     }
