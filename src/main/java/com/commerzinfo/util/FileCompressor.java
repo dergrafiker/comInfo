@@ -35,7 +35,7 @@ public class FileCompressor {
     private static File compressFile(File inputFile, String fileSuffix) throws IOException {
         String newFileName = inputFile.getName() + fileSuffix;
         File outFile = new File(inputFile.getParent(), newFileName);
-        try (InputStream fis = IOUtils.toBufferedInputStream(new FileInputStream(inputFile));) {
+        try (InputStream fis = IOUtils.toBufferedInputStream(new FileInputStream(inputFile))) {
             try (BZip2CompressorOutputStream bcos = new BZip2CompressorOutputStream(new BufferedOutputStream(new FileOutputStream(outFile)))) {
                 IOUtils.copy(fis, bcos);
             }
