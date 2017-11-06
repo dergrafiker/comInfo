@@ -1,0 +1,5 @@
+﻿Buchungstag;Wertstellung;Umsatzart;Buchungstext;Betrag;Währung;Auftraggeberkonto;Bankleitzahl Auftraggeberkonto;IBAN Auftraggeberkonto
+31.10.2017;31.10.2017;Lastschrift;"Lastschrift";-33,63;EUR;KTO_NR;BLZ;HERE_BE_IBAN
+30.10.2017;30.10.2017;Einzahlung/Auszahlung;"Einzahlung/Auszahlung";-200,00;EUR;KTO_NR;BLZ;HERE_BE_IBAN
+30.10.2017;30.10.2017;Dauerauftrag;"Dauerauftrag";-17,67;EUR;KTO_NR;BLZ;HERE_BE_IBAN
+16.10.2017;16.10.2017;Gutschrift;"Gutschrift";1234,56;EUR;KTO_NR;BLZ;HERE_BE_IBAN
