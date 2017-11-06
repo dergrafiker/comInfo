@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ParseStateContext {
-    public static final ParseState BUCHUNGSTAG_STATE = new StateBuchungstag();
+    private static final ParseState BUCHUNGSTAG_STATE = new StateBuchungstag();
     public static final ParseState INITIAL_STATE = BUCHUNGSTAG_STATE;
     private ParseState state = INITIAL_STATE;
     public static final ParseState BUCHUNGSTEXT_STATE = new StateBuchungstext();

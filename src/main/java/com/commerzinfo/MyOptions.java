@@ -8,7 +8,7 @@ import org.kohsuke.args4j.spi.FileOptionHandler;
 import java.io.File;
 import java.util.List;
 
-public class MyOptions {
+class MyOptions {
 
     @Option(name = "-c", usage = "path to configFile", handler = FileOptionHandler.class)
     private final File configFile = new File(new File("."), "config.properties");

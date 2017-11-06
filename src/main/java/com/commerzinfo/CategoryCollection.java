@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CategoryCollection {
-    public static final String CATCHALL = "catchall";
+    private static final String CATCHALL = "catchall";
     private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
     private static final LinkedHashMap<String, Matcher> categoryMap = Maps.newLinkedHashMap();
     private static final Logger logger = LoggerFactory.getLogger(CategoryCollection.class);

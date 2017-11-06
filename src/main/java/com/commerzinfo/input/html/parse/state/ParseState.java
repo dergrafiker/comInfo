@@ -5,7 +5,7 @@ import com.commerzinfo.input.html.parse.ParseStateContext;
 public abstract class ParseState {
     private final String stateName;
 
-    protected ParseState(String stateName) {
+    ParseState(String stateName) {
         this.stateName = stateName;
     }
 
@@ -13,9 +13,9 @@ public abstract class ParseState {
         return stateName;
     }
 
-    public abstract boolean checkCondition(String input);
+    protected abstract boolean checkCondition(String input);
 
-    public abstract void doSomething(ParseStateContext stateContext, String input) throws Exception;
+    protected abstract void doSomething(ParseStateContext stateContext, String input) throws Exception;
 
     public void processInput(ParseStateContext stateContext, String input) {
         try {

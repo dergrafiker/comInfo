@@ -1,7 +1,6 @@
 package com.commerzinfo.util;
 
 import com.commerzinfo.DataRow;
-import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,7 +12,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ExcelUtil {
@@ -35,7 +33,7 @@ public final class ExcelUtil {
         }
     }
 
-    public static File createExcelFile(File inFile) throws IOException {
+    private static File createExcelFile(File inFile) throws IOException {
         File parentFile = inFile.getParentFile();
         String newFilename = inFile.getName() + ".xls";
 
@@ -63,7 +61,7 @@ public final class ExcelUtil {
         return row;
     }
 
-    public static Cell createCell(Row row, AtomicInteger cellCounter) {
+    private static Cell createCell(Row row, AtomicInteger cellCounter) {
         Cell cell = row.createCell(cellCounter.get());
         cellCounter.incrementAndGet();
         return cell;

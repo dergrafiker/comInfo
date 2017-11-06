@@ -61,7 +61,7 @@ public class DataRow {
 
     @Override
     public boolean equals(Object o) {
-        return EqualsBuilder.reflectionEquals(this, o);
+        return o != null && o.getClass().equals(DataRow.class) && EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override

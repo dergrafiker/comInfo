@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-public class Launcher {
+class Launcher {
     private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
 
     public static void main(String[] args) throws Exception {
