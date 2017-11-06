@@ -33,16 +33,12 @@ public class FileCompressor {
     }
 
     private static File compressFile(File inputFile, String fileSuffix) throws IOException {
-        InputStream fis = IOUtils.toBufferedInputStream(new FileInputStream(inputFile));
         String newFileName = inputFile.getName() + fileSuffix;
         File outFile = new File(inputFile.getParent(), newFileName);
-        BZip2CompressorOutputStream bcos = new BZip2CompressorOutputStream(new BufferedOutputStream(new FileOutputStream(outFile)));
-        try {
-            IOUtils.copy(fis, bcos);
-        } finally {
-            bcos.flush();
-            IOUtils.closeQuietly(bcos);
-            IOUtils.closeQuietly(fis);
+        try (InputStream fis = IOUtils.toBufferedInputStream(new FileInputStream(inputFile));) {
+            try (BZip2CompressorOutputStream bcos = new BZip2CompressorOutputStream(new BufferedOutputStream(new FileOutputStream(outFile)))) {
+                IOUtils.copy(fis, bcos);
+            }
         }
         return outFile;
     }
