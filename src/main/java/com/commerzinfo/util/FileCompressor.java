@@ -13,7 +13,10 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
-public class FileCompressor {
+public final class FileCompressor {
+    private FileCompressor() {
+    }
+
     public static List<File> compressFiles(Collection<File> inputFiles, String fileSuffix) throws IOException {
         List<File> fileCollection = Lists.newArrayList();
 
