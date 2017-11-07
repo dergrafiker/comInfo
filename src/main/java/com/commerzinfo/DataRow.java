@@ -16,6 +16,9 @@ public class DataRow {
     private Date valueDate;
     private BigDecimal value;
 
+    public DataRow() {
+    }
+
     public Date getBookingDate() {
         return bookingDate;
     }
