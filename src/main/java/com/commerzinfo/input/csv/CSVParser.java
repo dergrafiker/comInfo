@@ -2,6 +2,7 @@ package com.commerzinfo.input.csv;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import com.opencsv.bean.MappingStrategy;
 import com.commerzinfo.DataRow;
@@ -23,9 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVParser {
-    private static final CsvToBean<CSVBean> csvToBean = new CsvToBean<>();
     private static final MappingStrategy<CSVBean> mappingStrategy = initStrategy();
     private static final Logger logger = LoggerFactory.getLogger(CSVParser.class);
+    private static final char SEPARATOR = ';';
+    private static final char QUOTECHAR = '"';
 
     private static HeaderColumnNameTranslateMappingStrategy<CSVBean> initStrategy() {
         final HeaderColumnNameTranslateMappingStrategy<CSVBean> translateMappingStrategy = new HeaderColumnNameTranslateMappingStrategy<>();
@@ -44,8 +46,13 @@ public class CSVParser {
         List<DataRow> dataRows = Lists.newArrayList();
         try (InputStream inputStream = CompressionUtil.getCorrectInputStream(file)) {
             try (BOMInputStream bomInputStream = new BOMInputStream(inputStream, false)) {
-                try (CSVReader csvReader = new CSVReader(new InputStreamReader(bomInputStream, "UTF-8"), ';', '"')) {
-                    List<CSVBean> csvBeanList = csvToBean.parse(mappingStrategy, csvReader);
+                try (InputStreamReader inputStreamReader = new InputStreamReader(bomInputStream, "UTF-8")) {
+                    List<CSVBean> csvBeanList = new CsvToBeanBuilder<CSVBean>(inputStreamReader)
+                            .withSeparator(SEPARATOR)
+                            .withQuoteChar(QUOTECHAR)
+                            .withMappingStrategy(mappingStrategy)
+                            .build()
+                            .parse();
 
                     for (CSVBean csvBean : csvBeanList) {
                         try {
