@@ -6,7 +6,6 @@ import com.commerzinfo.input.html.parse.state.StateBetrag;
 import com.commerzinfo.input.html.parse.state.StateBuchungstag;
 import com.commerzinfo.input.html.parse.state.StateBuchungstext;
 import com.commerzinfo.input.html.parse.state.StateValuta;
-import com.commerzinfo.util.ReflectionUtil;
 import org.tinylog.Logger;
 
 
@@ -50,7 +49,7 @@ public class ParseStateContext {
 
         state.processInput(stateContext, input);
 
-        if (ReflectionUtil.allFieldsFilled(this.buchungszeile)) {
+        if (this.buchungszeile.allFieldsAreFilled()) {
             Logger.trace("found all required fields. returning a new row " + this.buchungszeile.toString());
 
             DataRow returnValue = this.buchungszeile; //save the reference - it is set to new in resetToInitialState()

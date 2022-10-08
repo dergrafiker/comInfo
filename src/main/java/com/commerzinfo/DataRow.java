@@ -72,4 +72,11 @@ public class DataRow {
     public int hashCode() {
         return Objects.hash(df, bookingDate, bookingText, valueDate, value);
     }
+
+    public boolean allFieldsAreFilled() {
+        return Objects.nonNull(bookingDate)
+                && Objects.nonNull(bookingText)
+                && Objects.nonNull(valueDate)
+                && Objects.nonNull(value);
+    }
 }
