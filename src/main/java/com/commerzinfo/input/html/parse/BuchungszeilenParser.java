@@ -1,15 +1,15 @@
 package com.commerzinfo.input.html.parse;
 
 import com.commerzinfo.DataRow;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class BuchungszeilenParser {
 
     public static List<DataRow> parseRows(Collection<String> inputRows) {
-        List<DataRow> buchungsZeilen = Lists.newArrayList();
+        List<DataRow> buchungsZeilen = new ArrayList<>();
 
         ParseStateContext ctx = new ParseStateContext();
 

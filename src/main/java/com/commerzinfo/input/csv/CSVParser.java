@@ -1,15 +1,12 @@
 package com.commerzinfo.input.csv;
 
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
-import com.opencsv.bean.MappingStrategy;
 import com.commerzinfo.DataRow;
 import com.commerzinfo.util.CompressionUtil;
 import com.commerzinfo.util.DateUtil;
 import com.commerzinfo.util.DecimalFormatUtil;
-import com.google.common.collect.Lists;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
+import com.opencsv.bean.MappingStrategy;
 import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +41,7 @@ public class CSVParser {
     }
 
     public static List<DataRow> handleCSV(File file) throws IOException {
-        List<DataRow> dataRows = Lists.newArrayList();
+        List<DataRow> dataRows = new ArrayList<>();
         try (InputStream inputStream = CompressionUtil.getCorrectInputStream(file)) {
             try (BOMInputStream bomInputStream = new BOMInputStream(inputStream, false)) {
                 try (InputStreamReader inputStreamReader = new InputStreamReader(bomInputStream, "UTF-8")) {

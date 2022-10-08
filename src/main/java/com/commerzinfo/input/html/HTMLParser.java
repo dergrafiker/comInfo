@@ -4,7 +4,6 @@ import com.commerzinfo.Constants;
 import com.commerzinfo.DataRow;
 import com.commerzinfo.input.html.parse.BuchungszeilenParser;
 import com.commerzinfo.util.CompressionUtil;
-import com.google.common.collect.Lists;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.MasonTagTypes;
 import net.htmlparser.jericho.MicrosoftConditionalCommentTagTypes;
@@ -15,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HTMLParser {
@@ -34,7 +34,7 @@ public class HTMLParser {
         }
 
         Source source = new Source(CompressionUtil.getCorrectInputStream(file));
-        List<String> lines = Lists.newArrayList();
+        List<String> lines = new ArrayList<>();
         for (Element currentElement : source.getAllElements(element)) {
             lines.add(currentElement.getContent().toString());
         }

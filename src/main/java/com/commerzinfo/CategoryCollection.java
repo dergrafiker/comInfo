@@ -1,15 +1,13 @@
 package com.commerzinfo;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +17,7 @@ import java.util.regex.Pattern;
 public class CategoryCollection {
     private static final String CATCHALL = "catchall";
     private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
-    private static final LinkedHashMap<String, Matcher> categoryMap = Maps.newLinkedHashMap();
+    private static final HashMap<String, Matcher> categoryMap = new LinkedHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(CategoryCollection.class);
 
     @SuppressWarnings("unchecked")
@@ -62,17 +60,21 @@ public class CategoryCollection {
     }
 
     public static List<String> getAllCategoryNames() {
-        return Lists.newArrayList(categoryMap.keySet());
+        return new ArrayList<>(categoryMap.keySet());
     }
 
-    public static Multimap<String, DataRow> matchRowsToCategories(Collection<DataRow> parsedRows) {
-        Multimap<String, DataRow> categoryToRowMap = ArrayListMultimap.create();
+    public static Map<String, Collection<DataRow>> matchRowsToCategories(Collection<DataRow> parsedRows) {
+        Map<String, Collection<DataRow>> categoryToRowMap = new HashMap<>();
 
         for (DataRow parsedRow : parsedRows) {
             for (Map.Entry<String, Matcher> entry : categoryMap.entrySet()) {
                 final Matcher matcher = entry.getValue().reset(parsedRow.getBookingText());
                 if (matcher.find()) {
-                    categoryToRowMap.put(entry.getKey(), parsedRow);
+                    String key = entry.getKey();
+                    Collection<DataRow> rowCollection = categoryToRowMap.getOrDefault(key, new ArrayList<>());
+                    rowCollection.add(parsedRow);
+
+                    categoryToRowMap.put(key, rowCollection);
                     break;
                 }
             }

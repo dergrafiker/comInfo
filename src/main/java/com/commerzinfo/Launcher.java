@@ -4,7 +4,6 @@ import com.commerzinfo.input.csv.CSVParser;
 import com.commerzinfo.input.html.HTMLParser;
 import com.commerzinfo.output.AnotherExcelWriter;
 import com.commerzinfo.util.FileCompressor;
-import com.google.common.collect.Lists;
 import net.htmlparser.jericho.HTMLElementName;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -13,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +31,7 @@ class Launcher {
 
             CategoryCollection.createCategories(myOptions.getConfigFile()); //init
 
-            List<File> fileList = Lists.newArrayList();
+            List<File> fileList = new ArrayList<>();
             for (String s : myOptions.getArguments()) {
                 fileList.addAll(FileUtils.listFiles(new File(s), Constants.ALLOWED_FILE_FILTER, TrueFileFilter.INSTANCE));
             }
@@ -42,7 +42,7 @@ class Launcher {
             for (File file : fileList) {
                 logger.info("READING FILE {}", file.getAbsolutePath());
 
-                List<DataRow> parsedRows = Lists.newArrayList();
+                List<DataRow> parsedRows = new ArrayList<>();
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
                     parsedRows = HTMLParser.handleHTML(HTMLElementName.SPAN, file);
                 } else if (Constants.CSV_FILE_FILTER.accept(file)) {

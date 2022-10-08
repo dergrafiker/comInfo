@@ -3,7 +3,6 @@ package com.commerzinfo.output;
 import com.commerzinfo.CategoryCollection;
 import com.commerzinfo.DataRow;
 import com.commerzinfo.util.ExcelUtil;
-import com.google.common.collect.Multimap;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -15,6 +14,8 @@ import org.apache.poi.ss.util.CellReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("SameParameterValue")
@@ -31,7 +32,7 @@ public class AnotherExcelWriter {
     }
 
     private static void writeDataRows(Sheet sheet, Collection<DataRow> parsedRows, String startRefString) {
-        Multimap<String, DataRow> catToRows = CategoryCollection.matchRowsToCategories(parsedRows);
+        Map<String, Collection<DataRow>> catToRows = CategoryCollection.matchRowsToCategories(parsedRows);
         CellReference startRef = new CellReference(startRefString);
         AtomicInteger rowCounter = new AtomicInteger(startRef.getRow());
 
@@ -40,7 +41,7 @@ public class AnotherExcelWriter {
         dateCellStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("d.m.yy"));
 
         for (String categoryName : CategoryCollection.getAllCategoryNames()) {
-            Collection<DataRow> rows = catToRows.get(categoryName);
+            Collection<DataRow> rows = catToRows.getOrDefault(categoryName, Collections.emptySet());
             if (!rows.isEmpty()) {
                 for (DataRow dataRow : rows) {
                     ExcelUtil.createDataRow(sheet, dateCellStyle, rowCounter, startRef.getCol(), categoryName, dataRow);
