@@ -13,7 +13,7 @@ class MyOptions {
     @Option(name = "-c", usage = "path to configFile", handler = FileOptionHandler.class)
     private File configFile = new File(new File("."), "config.properties");
 
-    @Argument
+    @Argument(required = true)
     private List<String> arguments = Lists.newArrayList();
 
     List<String> getArguments() {
