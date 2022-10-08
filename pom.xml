@@ -15,10 +15,6 @@
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
     </properties>
 
-    <scm>
-        <connection>scm:git:https://github.com/dergrafiker/comInfo</connection>
-    </scm>
-
     <dependencies>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -83,7 +79,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}-${buildNumber}</finalName>
+        <finalName>${project.name}-${git.commit.id.abbrev}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -130,23 +126,17 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>5.0.0</version>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
                         <goals>
-                            <goal>create</goal>
+                            <goal>revision</goal>
                         </goals>
+                        <phase>initialize</phase>
                     </execution>
                 </executions>
-                <configuration>
-                    <shortRevisionLength>5</shortRevisionLength>
-                    <doCheck>true</doCheck>
-                    <doUpdate>true</doUpdate>
-                    <useLastCommittedRevision>true</useLastCommittedRevision>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
