@@ -4,7 +4,6 @@ import com.commerzinfo.input.csv.CSVParser;
 import com.commerzinfo.input.html.HTMLParser;
 import com.commerzinfo.output.AnotherExcelWriter;
 import com.commerzinfo.util.FileCompressor;
-import net.htmlparser.jericho.HTMLElementName;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.kohsuke.args4j.CmdLineParser;
@@ -42,7 +41,7 @@ class Launcher {
 
                 List<DataRow> parsedRows = new ArrayList<>();
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
-                    parsedRows = HTMLParser.handleHTML(HTMLElementName.SPAN, file);
+                    parsedRows = HTMLParser.getAllElementTextsFromFile("span", file);
                 } else if (Constants.CSV_FILE_FILTER.accept(file)) {
                     parsedRows = CSVParser.handleCSV(file);
                 }
