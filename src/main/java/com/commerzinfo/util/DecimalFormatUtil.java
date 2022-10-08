@@ -1,5 +1,6 @@
 package com.commerzinfo.util;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -22,15 +23,15 @@ public final class DecimalFormatUtil {
     private DecimalFormatUtil() {
     }
 
-    public static Number parse(String source, Mode mode) throws ParseException {
+    public static BigDecimal parse(String source, Mode mode) throws ParseException {
         if (Mode.HTML.equals(mode)) {
-            return HTML_FORMAT.parse(source);
+            return (BigDecimal) HTML_FORMAT.parse(source);
         } else if (Mode.CSV.equals(mode)) {
             //some rows have a pos prefix some don't. so just remove it for every row
             if (source.contains("+")) {
-                source = source.replaceAll("\\+", "");
+                source = source.replace("+", "");
             }
-            return CSV_FORMAT.parse(source);
+            return (BigDecimal) CSV_FORMAT.parse(source);
         } else {
             return null;
         }

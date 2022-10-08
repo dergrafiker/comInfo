@@ -32,11 +32,19 @@ public class CSVParser {
                             try {
                                 DataRow row = new DataRow();
 
-                                row.setBookingDate(LocalDate.parse(csvRow.getField("Buchungstag"), Constants.DDMMYYYY));
-                                row.setValueDate(LocalDate.parse(csvRow.getField("Wertstellung"), Constants.DDMMYYYY));
+                                String buchungstag = csvRow.getField("Buchungstag");
+                                if (!buchungstag.isBlank()) {
+                                    row.setBookingDate(LocalDate.parse(buchungstag, Constants.DDMMYYYY));
+                                }
+
+                                String wertstellung = csvRow.getField("Wertstellung");
+                                if (!wertstellung.isBlank()) {
+                                    row.setValueDate(LocalDate.parse(wertstellung, Constants.DDMMYYYY));
+                                }
+
                                 row.setBookingText(csvRow.getField("Buchungstext"));
-                                row.setValue((java.math.BigDecimal) DecimalFormatUtil.parse(csvRow.getField("Betrag"),
-                                        DecimalFormatUtil.Mode.CSV));
+                                String betrag = csvRow.getField("Betrag");
+                                row.setValue(DecimalFormatUtil.parse(betrag, DecimalFormatUtil.Mode.CSV));
                                 dataRows.add(row);
                             } catch (Exception e) {
                                 Logger.error("problem with datarow mapping", e);
