@@ -9,13 +9,16 @@ import net.htmlparser.jericho.MasonTagTypes;
 import net.htmlparser.jericho.MicrosoftConditionalCommentTagTypes;
 import net.htmlparser.jericho.PHPTagTypes;
 import net.htmlparser.jericho.Source;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.codec.binary.StringUtils;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public class HTMLParser {
 
@@ -29,7 +32,7 @@ public class HTMLParser {
     private static List<String> getElementsFromFile(File file, String element) throws IOException {
         if (!Constants.HTML_FILE_FILTER.accept(file)) {
             throw new IllegalArgumentException(file.getAbsolutePath() +
-                    " does not match " + StringUtils.join(Constants.HTML_PATTERNS, ','));
+                    " does not match " + String.join(",", Constants.HTML_PATTERNS));
         }
 
         Source source = new Source(CompressionUtil.getCorrectInputStream(file));

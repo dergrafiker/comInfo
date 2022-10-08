@@ -1,12 +1,10 @@
 package com.commerzinfo;
 
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class DataRow {
     private final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -64,11 +62,14 @@ public class DataRow {
 
     @Override
     public boolean equals(Object o) {
-        return o != null && o.getClass().equals(DataRow.class) && EqualsBuilder.reflectionEquals(this, o);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DataRow dataRow = (DataRow) o;
+        return Objects.equals(df, dataRow.df) && bookingDate.equals(dataRow.bookingDate) && bookingText.equals(dataRow.bookingText) && valueDate.equals(dataRow.valueDate) && value.equals(dataRow.value);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return Objects.hash(df, bookingDate, bookingText, valueDate, value);
     }
 }

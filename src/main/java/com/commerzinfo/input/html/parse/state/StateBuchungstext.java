@@ -1,7 +1,6 @@
 package com.commerzinfo.input.html.parse.state;
 
 import com.commerzinfo.input.html.parse.ParseStateContext;
-import org.apache.commons.lang3.StringUtils;
 
 public class StateBuchungstext extends ParseState {
     public StateBuchungstext() {
@@ -10,7 +9,7 @@ public class StateBuchungstext extends ParseState {
 
     @Override
     public boolean checkCondition(String input) {
-        return StringUtils.isNotBlank(input);
+        return input != null && !input.isBlank();
     }
 
     @Override
