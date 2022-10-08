@@ -18,7 +18,6 @@ public class CategoryCollection {
     private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
     private static final HashMap<String, Matcher> categoryMap = new LinkedHashMap<>();
 
-    @SuppressWarnings("unchecked")
     public static void createCategories(File configFile) {
         if (configFile != null && configFile.isFile()) {
             categoryMap.clear();

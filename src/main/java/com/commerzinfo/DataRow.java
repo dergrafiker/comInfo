@@ -3,25 +3,25 @@ package com.commerzinfo;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class DataRow {
     private final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-    private Date bookingDate;
+    private LocalDate bookingDate;
     private String bookingText;
-    private Date valueDate;
+    private LocalDate valueDate;
     private BigDecimal value;
 
     public DataRow() {
     }
 
-    public Date getBookingDate() {
+    public LocalDate getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(Date bookingDate) {
+    public void setBookingDate(LocalDate bookingDate) {
         this.bookingDate = bookingDate;
     }
 
@@ -33,12 +33,11 @@ public class DataRow {
         this.bookingText = bookingText;
     }
 
-    @SuppressWarnings("unused")
-    public Date getValueDate() {
+    public LocalDate getValueDate() {
         return valueDate;
     }
 
-    public void setValueDate(Date valueDate) {
+    public void setValueDate(LocalDate valueDate) {
         this.valueDate = valueDate;
     }
 
@@ -50,12 +49,14 @@ public class DataRow {
         this.value = value;
     }
 
+
     @Override
     public String toString() {
         return "DataRow{" +
-                "bookingDate=" + df.format(bookingDate) +
+                "df=" + df +
+                ", bookingDate=" + bookingDate +
                 ", bookingText='" + bookingText + '\'' +
-                ", valueDate=" + df.format(valueDate) +
+                ", valueDate=" + valueDate +
                 ", value=" + value +
                 '}';
     }

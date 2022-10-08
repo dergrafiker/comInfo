@@ -19,11 +19,6 @@ import java.util.List;
 public class HTMLParser {
 
     private static List<String> getElementsFromFile(File file, String element) throws IOException {
-        if (!Constants.HTML_FILE_FILTER.accept(file)) {
-            throw new IllegalArgumentException(file.getAbsolutePath() +
-                    " does not match " + String.join(",", Constants.HTML_PATTERNS));
-        }
-
         InputStream correctInputStream = CompressionUtil.getCorrectInputStream(file);
         String htmlText = IOUtils.toString(correctInputStream, StandardCharsets.UTF_8);
         Document document = Jsoup.parse(htmlText);

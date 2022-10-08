@@ -13,7 +13,7 @@ public class StateBuchungstext extends ParseState {
     }
 
     @Override
-    public void doSomething(ParseStateContext stateContext, String input) throws Exception {
+    public void doSomething(ParseStateContext stateContext, String input) {
         stateContext.getBuchungszeile().setBookingText(input);
         stateContext.setState(ParseStateContext.VALUTA_STATE);
     }

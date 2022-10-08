@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@SuppressWarnings("SameParameterValue")
 public class AnotherExcelWriter {
     public static void writeParsedRowsToFile(File file, Collection<DataRow> parsedRows) throws IOException {
         try (Workbook wb = new HSSFWorkbook()) {
