@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.LoggerFactory;
+import org.tinylog.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ExcelUtil {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
 
     private ExcelUtil() {
     }
@@ -26,9 +25,7 @@ public final class ExcelUtil {
         try (FileOutputStream fileOutputStream = new FileOutputStream(excelFile)) {
             try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)) {
                 wb.write(bufferedOutputStream);
-                if (logger.isInfoEnabled()) {
-                    logger.info("WRITING OF FILE " + excelFile.getName() + " was successful");
-                }
+                Logger.info("WRITING OF FILE " + excelFile.getName() + " was successful");
             }
         }
     }

@@ -8,8 +8,7 @@ import net.htmlparser.jericho.HTMLElementName;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.kohsuke.args4j.CmdLineParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 class Launcher {
-    private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
 
     public static void main(String[] args) throws Exception {
         try {
@@ -40,7 +38,7 @@ class Launcher {
             fileList.sort(Collections.reverseOrder());
 
             for (File file : fileList) {
-                logger.info("READING FILE {}", file.getAbsolutePath());
+                Logger.info("READING FILE {}", file.getAbsolutePath());
 
                 List<DataRow> parsedRows = new ArrayList<>();
                 if (Constants.HTML_FILE_FILTER.accept(file)) {
@@ -51,7 +49,7 @@ class Launcher {
                 AnotherExcelWriter.writeParsedRowsToFile(file, parsedRows);
             }
         } catch (Exception e) {
-            logger.error("an error occurred while launching the program", e);
+            Logger.error("an error occurred while launching the program", e);
             throw e;
         }
     }

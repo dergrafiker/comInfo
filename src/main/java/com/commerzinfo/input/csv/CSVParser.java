@@ -8,8 +8,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import com.opencsv.bean.MappingStrategy;
 import org.apache.commons.io.input.BOMInputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +22,6 @@ import java.util.Map;
 
 public class CSVParser {
     private static final MappingStrategy<CSVBean> mappingStrategy = initStrategy();
-    private static final Logger logger = LoggerFactory.getLogger(CSVParser.class);
     private static final char SEPARATOR = ';';
     private static final char QUOTECHAR = '"';
 
@@ -62,13 +60,13 @@ public class CSVParser {
                                                                                         DecimalFormatUtil.Mode.CSV));
                             dataRows.add(row);
                         } catch (ParseException e) {
-                            logger.error("problem with datarow mapping", e);
+                            Logger.error("problem with datarow mapping", e);
                         }
                     }
                 }
             }
         }
-        logger.info("{} has {} parsed rows", file.getAbsolutePath(), dataRows.size());
+        Logger.info("{} has {} parsed rows", file.getAbsolutePath(), dataRows.size());
         return dataRows;
     }
 }

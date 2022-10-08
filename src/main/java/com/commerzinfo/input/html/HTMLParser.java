@@ -10,7 +10,7 @@ import net.htmlparser.jericho.MicrosoftConditionalCommentTagTypes;
 import net.htmlparser.jericho.PHPTagTypes;
 import net.htmlparser.jericho.Source;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HTMLParser {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HTMLParser.class);
 
     static {
         MicrosoftConditionalCommentTagTypes.register();
@@ -44,14 +43,10 @@ public class HTMLParser {
     public static List<DataRow> handleHTML(String elementToSearch, File file) throws IOException {
         List<DataRow> parsedRows;
         List<String> elementsFromFile = HTMLParser.getElementsFromFile(file, elementToSearch);
-        if (logger.isInfoEnabled()) {
-            logger.info(String.format("%s has %d elements of type: %s",
-                                      file, elementsFromFile.size(), elementToSearch));
-        }
+        Logger.info(String.format("%s has %d elements of type: %s",
+                file, elementsFromFile.size(), elementToSearch));
         parsedRows = BuchungszeilenParser.parseRows(elementsFromFile);
-        if (logger.isInfoEnabled()) {
-            logger.info(String.format("%s has %d parsed rows", file, parsedRows.size()));
-        }
+        Logger.info(String.format("%s has %d parsed rows", file, parsedRows.size()));
         return parsedRows;
     }
 }
