@@ -8,6 +8,9 @@ import java.util.List;
 
 public class BuchungszeilenParser {
 
+    private BuchungszeilenParser() {
+    }
+
     public static List<DataRow> parseRows(Collection<String> inputRows) {
         List<DataRow> buchungsZeilen = new ArrayList<>();
 

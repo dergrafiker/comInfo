@@ -8,6 +8,9 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import java.time.format.DateTimeFormatter;
 
 public class Constants {
+
+    private Constants() {}
+
     protected static final String[] HTML_PATTERNS = new String[]{"*.html", "*.htm", "*.html.bz2", "*.htm.bz2"};
     public static final IOFileFilter HTML_FILE_FILTER = new WildcardFileFilter(HTML_PATTERNS, IOCase.INSENSITIVE);
     public static final DateTimeFormatter DDMMYYYY = DateTimeFormatter.ofPattern("dd.MM.yyyy");

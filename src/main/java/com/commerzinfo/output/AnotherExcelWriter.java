@@ -19,6 +19,10 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AnotherExcelWriter {
+
+    private AnotherExcelWriter() {
+    }
+
     public static void writeParsedRowsToFile(File file, Collection<DataRow> parsedRows) throws IOException {
         try (Workbook wb = new HSSFWorkbook()) {
             Sheet sheet = wb.createSheet("data");

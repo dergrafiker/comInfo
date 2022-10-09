@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +15,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CategoryCollection {
+
+    private static final String EQUALS = "=";
+
+    private CategoryCollection() {
+    }
+
     private static final String CATCHALL = "catchall";
     private static final Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE).matcher("");
     private static final HashMap<String, Matcher> categoryMap = new LinkedHashMap<>();
@@ -22,10 +29,10 @@ public class CategoryCollection {
         if (configFile != null && configFile.isFile()) {
             categoryMap.clear();
             try {
-                for (String line : FileUtils.readLines(configFile, "UTF-8")) {
-                    if (!line.contains("="))
+                for (String line : FileUtils.readLines(configFile, StandardCharsets.UTF_8)) {
+                    if (!line.contains(EQUALS))
                         continue;
-                    final String[] split = line.split("=");
+                    final String[] split = line.split(EQUALS);
                     if (split.length == 2) {
                         String catName = split[0];
                         String regex = split[1];
@@ -33,10 +40,10 @@ public class CategoryCollection {
                         Matcher matcher = getMatcher(regex);
                         categoryMap.put(catName, matcher);
                     } else
-                        throw new RuntimeException("split error");
+                        throw new IllegalArgumentException("split error line=" + line + " split=" + EQUALS);
                 }
             } catch (Exception e) {
-                throw new RuntimeException("configFile=" + configFile.getAbsolutePath(), e);
+                throw new IllegalArgumentException("configFile=" + configFile.getAbsolutePath(), e);
             }
         }
 

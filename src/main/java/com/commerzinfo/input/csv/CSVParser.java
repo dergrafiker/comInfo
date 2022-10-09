@@ -19,6 +19,9 @@ import java.util.List;
 
 public class CSVParser {
 
+    private CSVParser() {
+    }
+
     public static List<DataRow> handleCSV(File file) throws IOException {
         List<DataRow> dataRows = new ArrayList<>();
         try (InputStream inputStream = CompressionUtil.getCorrectInputStream(file)) {

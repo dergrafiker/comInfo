@@ -1,6 +1,5 @@
 package com.commerzinfo.input.html;
 
-import com.commerzinfo.Constants;
 import com.commerzinfo.DataRow;
 import com.commerzinfo.input.html.parse.BuchungszeilenParser;
 import com.commerzinfo.util.CompressionUtil;
@@ -17,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class HTMLParser {
+
+    private HTMLParser() {}
 
     private static List<String> getElementsFromFile(File file, String element) throws IOException {
         InputStream correctInputStream = CompressionUtil.getCorrectInputStream(file);

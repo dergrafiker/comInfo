@@ -2,20 +2,15 @@ package com.commerzinfo;
 
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class DataRow {
-    private final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
     private LocalDate bookingDate;
     private String bookingText;
     private LocalDate valueDate;
     private BigDecimal value;
-
-    public DataRow() {
-    }
 
     public LocalDate getBookingDate() {
         return bookingDate;
@@ -49,12 +44,10 @@ public class DataRow {
         this.value = value;
     }
 
-
     @Override
     public String toString() {
         return "DataRow{" +
-                "df=" + df +
-                ", bookingDate=" + bookingDate +
+                "bookingDate=" + bookingDate +
                 ", bookingText='" + bookingText + '\'' +
                 ", valueDate=" + valueDate +
                 ", value=" + value +
@@ -66,12 +59,15 @@ public class DataRow {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DataRow dataRow = (DataRow) o;
-        return Objects.equals(df, dataRow.df) && bookingDate.equals(dataRow.bookingDate) && bookingText.equals(dataRow.bookingText) && valueDate.equals(dataRow.valueDate) && value.equals(dataRow.value);
+        return Objects.equals(bookingDate, dataRow.bookingDate)
+                && Objects.equals(bookingText, dataRow.bookingText)
+                && Objects.equals(valueDate, dataRow.valueDate)
+                && Objects.equals(value, dataRow.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(df, bookingDate, bookingText, valueDate, value);
+        return Objects.hash(bookingDate, bookingText, valueDate, value);
     }
 
     public boolean allFieldsAreFilled() {

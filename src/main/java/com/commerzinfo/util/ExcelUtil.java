@@ -35,7 +35,6 @@ public final class ExcelUtil {
         String newFilename = inFile.getName() + ".xls";
 
         File excelFile = new File(parentFile, newFilename);
-        //noinspection ResultOfMethodCallIgnored
         excelFile.createNewFile();
 
         return excelFile;
