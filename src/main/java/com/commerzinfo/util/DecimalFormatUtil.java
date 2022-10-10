@@ -2,13 +2,14 @@ package com.commerzinfo.util;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
 public final class DecimalFormatUtil {
     //Numberformat 2.091,56+ or 100,00-
-    private static final DecimalFormat HTML_FORMAT = (DecimalFormat) DecimalFormat.getInstance(Locale.GERMAN);
-    private static final DecimalFormat CSV_FORMAT = (DecimalFormat) DecimalFormat.getInstance(Locale.GERMAN);
+    private static final DecimalFormat HTML_FORMAT = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN);
+    private static final DecimalFormat CSV_FORMAT = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN);
 
     static {
         HTML_FORMAT.setNegativePrefix("");

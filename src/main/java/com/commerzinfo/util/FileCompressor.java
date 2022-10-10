@@ -26,7 +26,9 @@ public final class FileCompressor {
             } else {
                 File outFile = compressFile(inputFile, fileSuffix);
                 if (!CompressionUtil.contentIsEqual(inputFile, outFile)) {
-                    throw new RuntimeException("Problem with compressed Stream. check files!");
+                    throw new IOException("Problem with compressed Stream. check files!" +
+                            " input=" + inputFile.getAbsolutePath() +
+                            " output=" + outFile.getAbsolutePath());
                 }
                 inputFile.deleteOnExit();
                 fileCollection.add(outFile);
