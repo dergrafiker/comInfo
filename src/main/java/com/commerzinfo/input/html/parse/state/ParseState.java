@@ -2,6 +2,8 @@ package com.commerzinfo.input.html.parse.state;
 
 import com.commerzinfo.input.html.parse.ParseStateContext;
 
+import java.text.ParseException;
+
 public abstract class ParseState {
     private final String stateName;
 
@@ -15,7 +17,7 @@ public abstract class ParseState {
 
     protected abstract boolean checkCondition(String input);
 
-    protected abstract void doSomething(ParseStateContext stateContext, String input) throws Exception;
+    protected abstract void doSomething(ParseStateContext stateContext, String input) throws ParseException;
 
     public void processInput(ParseStateContext stateContext, String input) {
         try {
@@ -25,7 +27,13 @@ public abstract class ParseState {
                 stateContext.resetToInitialState();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new ParsingFailedException(e);
+        }
+    }
+
+    public static class ParsingFailedException extends RuntimeException {
+        public ParsingFailedException(Throwable cause) {
+            super(cause);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.commerzinfo.Constants;
 import com.commerzinfo.input.html.parse.ParseStateContext;
 import com.commerzinfo.util.RegexUtil;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 
 public class StateBuchungstag extends ParseState {
@@ -18,7 +19,7 @@ public class StateBuchungstag extends ParseState {
     }
 
     @Override
-    public void doSomething(ParseStateContext stateContext, String input) throws Exception {
+    public void doSomething(ParseStateContext stateContext, String input) throws ParseException {
         stateContext.getBuchungszeile().setBookingDate(LocalDate.parse(input, Constants.DDMMYYYY));
         stateContext.setState(ParseStateContext.BUCHUNGSTEXT_STATE);
     }
